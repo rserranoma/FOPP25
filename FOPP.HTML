@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecciones FOPP Completas (Sin Citas)</title>
+    <style>
+        :root {
+            --primary-color: #007bff; /* Azul vibrante */
+            --primary-hover-color: #0056b3; /* Azul más oscuro para hover */
+            --secondary-color: #6c757d; /* Gris secundario */
+            --background-color: #f4f7f9; /* Fondo ligeramente grisáceo */
+            --text-color: #333; /* Texto principal oscuro */
+            --card-bg: #ffffff; /* Fondo de las tarjetas (blanco) */
+            --border-radius: 10px; /* Bordes más redondeados */
+            --box-shadow: 0 5px 15px rgba(0,0,0,0.08); /* Sombra más suave */
+            --success-color: #28a745; /* Verde para éxito */
+            --success-hover-color: #218838; /* Verde más oscuro para hover */
+            --font-main: 'Roboto', 'Segoe UI', Arial, sans-serif; /* Fuente moderna */
+            --light-blue-bg: #e9f5ff; /* Fondo azul claro para elementos destacados */
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: var(--font-main); margin: 0; background-color: var(--background-color);
+            color: var(--text-color); line-height: 1.7; display: flex; flex-direction: column; min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #0056b3); color: white;
+            padding: 1.8rem 1rem; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header h1 { margin: 0; font-size: 2.2rem; font-weight: 700; }
+        #lesson-nav {
+            display: flex; flex-wrap: wrap; justify-content: center; padding: 1.5rem 1rem;
+            background-color: var(--card-bg); box-shadow: var(--box-shadow); margin-bottom: 2rem;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+        #lesson-nav button {
+            background-color: var(--primary-color); color: white; border: none; padding: 0.9rem 1.6rem;
+            margin: 0.6rem; border-radius: var(--border-radius); cursor: pointer; font-size: 1rem; font-weight: 500;
+            transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        #lesson-nav button:hover {
+            background-color: var(--primary-hover-color); transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        #lesson-nav button.active {
+            background-color: var(--primary-hover-color); font-weight: 700;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2) inset, 0 2px 5px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+        main {
+            flex-grow: 1; padding: 0 1.5rem 2rem 1.5rem; max-width: 950px; width: 90%; margin: 0 auto;
+        }
+        .section-container {
+            background-color: var(--card-bg); padding: 2rem 2.5rem; border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow); margin-bottom: 2rem;
+        }
+        .hidden { display: none !important; }
+        #lesson-view-title, #test-title, #score-container h3 {
+            color: var(--primary-color); border-bottom: 3px solid var(--primary-color); padding-bottom: 0.8rem;
+            margin-top: 0; margin-bottom: 1.5rem; font-size: 1.8rem; font-weight: 700;
+        }
+        #lesson-content-area { min-height: 220px; }
+        #lesson-content-area p, #lesson-content-area ul, #lesson-content-area ol {
+            margin-bottom: 1.2rem; font-size: 1.05rem;
+        }
+        #lesson-content-area ul, #lesson-content-area ol { padding-left: 1.8rem; }
+        #lesson-content-area strong { color: var(--primary-hover-color); font-weight: 700; }
+        #lesson-content-area h3 {
+            color: var(--secondary-color); font-size: 1.5rem; margin-top: 2.2rem; margin-bottom: 1.2rem;
+            border-bottom: 2px solid #eee; padding-bottom: 0.5rem; font-weight: 500;
+        }
+         #lesson-content-area h4 {
+            color: var(--primary-color); font-size: 1.25rem; margin-top: 1.8rem; margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+        #lesson-content-area .concept-box {
+            background-color: var(--light-blue-bg); padding: 1.2rem 1.5rem;
+            border-left: 5px solid var(--primary-color); border-radius: 6px; margin: 1.8rem 0;
+        }
+        #lesson-content-area .concept-box strong { color: var(--primary-color); }
+        #lesson-pagination-controls {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 2.5rem;
+            padding-top: 1.5rem; border-top: 1px solid #e0e0e0;
+        }
+        #lesson-pagination-controls button {
+            background-color: var(--secondary-color); color: white; padding: 0.8rem 1.4rem;
+            border: none; border-radius: 6px; cursor: pointer; font-size: 0.95rem;
+            transition: background-color 0.2s; font-weight: 500;
+        }
+        #lesson-pagination-controls button:hover:not(:disabled) { background-color: #545b62; }
+        #lesson-pagination-controls button:disabled { background-color: #ccc; cursor: not-allowed; opacity: 0.7;}
+        #lesson-page-indicator { font-size: 1rem; color: var(--secondary-color); font-weight: 500; }
+        .question-item {
+            margin-bottom: 1.8rem; padding: 1.5rem; border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius); background-color: #fcfcfc;
+        }
+        .question-item p { font-weight: 500; font-size: 1.1rem; margin-bottom: 1rem;}
+        .question-item label {
+            display: block; margin-bottom: 0.6rem; padding: 0.8rem 1rem; border-radius: 6px;
+            cursor: pointer; transition: background-color 0.2s, border-color 0.2s;
+            border: 1px solid #eee; background-color: #fff;
+        }
+        .question-item label:hover { background-color: #e9f5ff; border-color: var(--primary-color); }
+        .question-item input[type="radio"] { margin-right: 0.8rem; vertical-align: middle; transform: scale(1.1); }
+        .action-btn {
+            display: inline-block; background-color: var(--success-color); color: white;
+            padding: 0.9rem 1.8rem; border: none; border-radius: var(--border-radius); cursor: pointer;
+            font-size: 1.05rem; font-weight: 500; margin-top: 1.5rem;
+            transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            text-decoration: none; box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .action-btn:hover {
+            background-color: var(--success-hover-color); transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+        #start-test-btn-container { text-align: center; margin-top: 2.5rem; }
+        #score-container { text-align: center; }
+        #score-display {
+            font-size: 2.5rem; font-weight: 700; color: var(--primary-color); margin: 1.5rem 0;
+            padding: 1rem 1.5rem; background-color: var(--light-blue-bg); border-radius: var(--border-radius);
+            display: inline-block; box-shadow: 0 2px 5px rgba(0,0,0,0.05) inset;
+        }
+        #feedback-message { font-style: italic; font-size: 1.1rem; margin-bottom: 1.5rem; }
+        #score-container .action-btn { margin: 0.5rem; }
+        #lesson-score-info {
+            margin-top: 1.5em; padding: 0.8em 1.2em; background-color: #eef2f7;
+            border-left: 5px solid var(--secondary-color); border-radius: 6px; font-style: italic;
+            color: #555;
+        }
+        footer {
+            text-align: center; padding: 2rem 1rem; background-color: #343a40;
+            color: #f8f9fa; margin-top: auto;
+        }
+        .styled-table {
+            width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .styled-table th, .styled-table td {
+            border: 1px solid #ddd; padding: 0.8rem 1rem; text-align: left;
+        }
+        .styled-table th {
+            background-color: var(--primary-color); color: white; font-weight: 500;
+        }
+        .styled-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .styled-table tr:hover { background-color: var(--light-blue-bg); }
+
+        .bar-chart-container { margin: 1.5rem 0; padding: 1rem; background-color: #f9f9f9; border-radius: var(--border-radius);}
+        .bar-chart-title { font-weight: bold; margin-bottom: 1rem; text-align: center; color: var(--primary-hover-color); }
+        .bar-item { display: flex; align-items: center; margin-bottom: 0.8rem; }
+        .bar-label { width: 25%; font-size: 0.9rem; padding-right: 1rem; text-align: right; }
+        .bar-wrapper { flex-grow: 1; background-color: #e0e0e0; border-radius: 4px; }
+        .bar {
+            height: 20px; background-color: var(--success-color); color: white;
+            text-align: right; padding-right: 5px; line-height: 20px;
+            border-radius: 4px; font-size: 0.8rem; white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8rem; }
+            #lesson-nav button { padding: 0.8rem 1.2rem; font-size: 0.9rem; }
+            main { padding: 0 1rem 1.5rem 1rem; width: 95%; }
+            .section-container { padding: 1.5rem; }
+            #lesson-view-title, #test-title, #score-container h3 { font-size: 1.6rem; }
+             #lesson-content-area h3 { font-size: 1.3rem; }
+        }
+        @media (max-width: 480px) {
+            #lesson-nav { flex-direction: column; align-items: stretch; }
+            #lesson-nav button { width: 100%; margin: 0.4rem 0; }
+            .action-btn { width: 100%; box-sizing: border-box; margin-top: 1rem; }
+            #score-container .action-btn { width: auto; padding: 0.8rem 1.2rem; }
+            #lesson-pagination-controls { flex-direction: column; gap: 0.5rem; }
+            #lesson-pagination-controls button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header><h1>Lecciones FOPP Completas</h1></header>
+    <nav id="lesson-nav"></nav>
+
+    <main>
+        <section id="lesson-view-container" class="section-container">
+            <h2 id="lesson-view-title">Bienvenido/a 👋</h2>
+            <article id="lesson-content-area">
+                <p>Selecciona una lección del menú para ver su resumen detallado. 🤓</p>
+                <p>Podrás navegar por el contenido si es extenso y, al finalizar, ¡ponerte a prueba con un test! 🧠</p>
+            </article>
+            <div id="lesson-pagination-controls" class="hidden">
+                <button id="lesson-prev-page-btn">⬅️ Anterior</button>
+                <span id="lesson-page-indicator"></span>
+                <button id="lesson-next-page-btn">Siguiente ➡️</button>
+            </div>
+            <div id="lesson-score-info" class="hidden"></div>
+            <div id="start-test-btn-container" class="hidden">
+                <button id="start-test-btn" class="action-btn">📝 Hacer Test de esta Lección</button>
+            </div>
+        </section>
+        <section id="test-area-container" class="section-container hidden">
+            <h2 id="test-title">Test de Comprensión</h2>
+            <form id="test-form">
+                 <div id="question-container"></div>
+                 <button type="submit" id="submit-test-btn" class="action-btn">✔️ Enviar Test</button>
+            </form>
+        </section>
+        <section id="score-container" class="section-container hidden">
+            <h3>Tu Puntuación: 🏆</h3>
+            <p id="score-display"></p>
+            <p id="feedback-message"></p>
+            <button id="retake-test-btn" class="action-btn">🔄 Volver a Intentar Test</button>
+            <button id="back-to-lesson-btn" class="action-btn">📖 Volver a la Lección</button>
+        </section>
+    </main>
+    <footer><p>&copy; 2025 App FOPP. Contenido adaptado.</p></footer>
+
+    <script>
+        const lessonsData = {
+            "antropologia": {
+                title: "1. La Antropología 🌍",
+                summaryTitle: " Explorando la Antropología",
+                content: [ // Contenido ahora es un array de strings (páginas)
+                    `<h3>¿Qué es la Antropología? 🤔</h3>
+                    <p>La <strong>ANTROPOLOGÍA</strong> es una ciencia social que se dedica al estudio del ser humano de una manera <strong>integral</strong>. Esto significa que no se enfoca en un solo aspecto, sino que busca comprender la totalidad de la experiencia humana.</p>
+                    <p>Examina aspectos como:</p>
+                    <ul>
+                        <li>La <strong>cultura</strong> y las sociedades.</li>
+                        <li>Las <strong>costumbres</strong> y tradiciones.</li>
+                        <li>Las diversas formas de <strong>organización social</strong>.</li>
+                        <li>Las <strong>relaciones</strong> interpersonales y grupales.</li>
+                    </ul>
+                    <div class="concept-box">
+                        <strong>Idea Clave:</strong> La antropología nos ofrece una visión holística, conectando diferentes facetas de lo que significa ser humano.
+                    </div>`,
+                    `<h3>Perspectivas Clave en Antropología 🔭</h3>
+                    <p>Para lograr esta comprensión integral, la antropología se apoya en varias perspectivas fundamentales que se observan en su campo de estudio:</p>
+                    <ul>
+                        <li><strong>Cultura:</strong> Entendida como el conjunto de conocimientos, creencias, arte, moral, derecho, costumbres y cualquier otra capacidad y hábito adquirido por el ser humano como miembro de una sociedad.</li>
+                        <li><strong>Cultura y Biología:</strong> Explora cómo nuestra biología y la cultura interactúan y se influencian mutuamente.</li>
+                        <li><strong>Diversidad:</strong> Reconoce y valora la inmensa variedad de formas de vida humanas a través del tiempo y el espacio.</li>
+                        <li><strong>Universalidad:</strong> Busca identificar características o patrones comunes a todas las culturas humanas, a pesar de su diversidad.</li>
+                        <li><strong>Comunicación:</strong> Estudia el lenguaje y otras formas de comunicación como elementos cruciales de la cultura y la interacción social.</li>
+                        <li><strong>Adaptación:</strong> Analiza cómo los seres humanos se adaptan a diferentes entornos, tanto biológica como culturalmente.</li>
+                        <li><strong>Relativismo Cultural:</strong> Propone que las prácticas y creencias de una cultura deben entenderse dentro del propio contexto de esa cultura.</li>
+                        <li><strong>Holismo (Visión Integral):</strong> La idea de que todas las partes de una cultura están interconectadas y deben estudiarse en conjunto para una comprensión completa.</li>
+                    </ul>
+                    <p>Estas perspectivas permiten a los antropólogos abordar la complejidad de la experiencia humana desde múltiples ángulos.</p>`
+                ],
+                questions: [
+    // Las 12 preguntas originales (revisadas y con comas correctas)
+    { text: "¿Qué es la antropología según el material?", options: ["Una ciencia social que estudia el ser humano de manera integral.", "Una rama de la biología que estudia la evolución humana.", "Una disciplina filosófica sobre el propósito de la vida.", "Una ciencia exacta que predice el comportamiento social."], correctAnswer: 0 },
+    { text: "La antropología estudia al ser humano de forma:", options: ["Parcial y segmentada", "Integral y holística", "Únicamente biológica", "Solo sus manifestaciones artísticas"], correctAnswer: 1 },
+    { text: "¿Cuál de estos NO es un campo de estudio explícitamente mencionado para la antropología en su definición inicial?", options: ["La cultura", "La sociedad", "Las costumbres", "La psicología individual detallada"], correctAnswer: 3 },
+    { text: "La perspectiva antropológica que enfatiza la visión completa y totalizadora del ser humano, considerando la interconexión de sus partes, se conoce como:", options: ["Relativismo cultural", "Adaptación", "Holismo", "Universalidad"], correctAnswer: 2 },
+    { text: "El concepto antropológico que se refiere a la variedad de expresiones y formas de vida humanas es:", options: ["Universalidad", "Diversidad", "Adaptación", "Comunicación"], correctAnswer: 1 },
+    { text: "La capacidad de ajuste del ser humano a diferentes entornos, tanto biológica como culturalmente, se denomina:", options: ["Cultura", "Adaptación", "Comunicación", "Relativismo"], correctAnswer: 1 },
+    { text: "Entender las prácticas culturales en su propio contexto, sin juzgarlas desde la perspectiva de otra cultura, se relaciona con el concepto de:", options: ["Etnocentrismo", "Relativismo cultural", "Holismo", "Universalismo"], correctAnswer: 1 },
+    { text: "Según las perspectivas antropológicas listadas, ¿cuál es un elemento crucial en la interacción social y la cultura?", options: ["La genética exclusivamente", "La comunicación", "La competencia individual innata", "El aislamiento social"], correctAnswer: 1 },
+    { text: "La antropología explora la interacción entre la cultura y la:", options: ["Economía global únicamente", "Biología humana", "Política contemporánea", "Tecnología digital"], correctAnswer: 1 },
+    { text: "El estudio de las 'formas de organización' y 'relaciones' humanas es parte del enfoque de la:", options: ["Sociología únicamente", "Antropología", "Psicología evolutiva", "Economía política"], correctAnswer: 1 },
+    { text: "Reconocer y valorar la variedad de formas de vida humanas es central para la perspectiva de la:", options: ["Adaptación", "Universalidad", "Diversidad", "Comunicación"], correctAnswer: 2 },
+    { text: "La búsqueda de características comunes a todas las culturas humanas se relaciona con la perspectiva de:", options: ["Diversidad", "Universalidad", "Relativismo Cultural", "Adaptación"], correctAnswer: 1 },
+    // Comienzan las 18 preguntas adicionales
+    { text: "La antropología, al estudiar la cultura, las costumbres y la organización social, aborda la dimensión primordialmente:", options: ["Biológica del ser humano", "Aprendida y social del ser humano", "Geográfica del entorno humano", "Psicológica individual del ser humano"], correctAnswer: 1 },
+    { text: "El enfoque 'integral' de la antropología significa que:", options: ["Solo estudia las sociedades antiguas.", "Intenta comprender al ser humano en su totalidad, conectando sus diferentes aspectos.", "Se especializa únicamente en la evolución física.", "Prioriza el estudio de una única cultura como modelo universal."], correctAnswer: 1 },
+    { text: "¿Cuál de las siguientes opciones describe mejor el concepto de 'holismo' en antropología?", options: ["El estudio detallado de una sola característica cultural.", "La idea de que todas las partes de una cultura están interconectadas y deben entenderse en conjunto.", "La creencia en la superioridad de una cultura sobre otras.", "El análisis de los aspectos universales ignorando la diversidad."], correctAnswer: 1 },
+    { text: "La perspectiva de la 'cultura y biología' en antropología sugiere que:", options: ["La biología determina completamente la cultura.", "La cultura no tiene ninguna influencia sobre la biología humana.", "Existe una interacción e influencia mutua entre los aspectos biológicos y culturales del ser humano.", "Solo los aspectos biológicos son científicamente estudiables."], correctAnswer: 2 },
+    { text: "El estudio antropológico de la 'comunicación' se enfoca en:", options: ["Únicamente en los idiomas escritos de civilizaciones antiguas.", "El lenguaje y otras formas de comunicación como elementos cruciales de la cultura.", "La tecnología de comunicación moderna exclusivamente.", "La comunicación entre diferentes especies animales."], correctAnswer: 1 },
+    { text: "La 'universalidad' como perspectiva antropológica implica buscar:", options: ["Aquello que hace única y diferente a cada cultura.", "Las leyes físicas que rigen el comportamiento humano.", "Características o patrones comunes a todas las sociedades humanas.", "La cultura más avanzada para proponerla como modelo universal."], correctAnswer: 2 },
+    { text: "Si un antropólogo estudia cómo un grupo humano ha modificado sus prácticas para sobrevivir en un desierto, está enfocándose en la perspectiva de:", options: ["Universalidad", "Comunicación", "Adaptación", "Relativismo cultural estricto"], correctAnswer: 2 },
+    { text: "La antropología se define como una ciencia:", options: ["Exacta, como las matemáticas.", "Natural, como la física.", "Social, que estudia al ser humano y sus sociedades.", "Oculta, basada en especulaciones."], correctAnswer: 2 },
+    { text: "Entender las 'formas de organización social' es un objetivo de la antropología. ¿Cuál de estos sería un ejemplo?", options: ["El estudio de la estructura atómica de los materiales.", "El análisis de los sistemas de parentesco en una tribu.", "La predicción del clima a largo plazo.", "La composición química de los alimentos."], correctAnswer: 1 },
+    { text: "La frase 'el ser humano de una manera integral' implica que la antropología:", options: ["Divide al ser humano en partes inconexas para su estudio.", "Considera las múltiples facetas del ser humano y cómo se relacionan.", "Se centra solo en los aspectos positivos del ser humano.", "Estudia solo a individuos completos, no a grupos."], correctAnswer: 1 },
+    { text: "La perspectiva antropológica que valora la existencia de múltiples formas de vida humana es la de:", options: ["Holismo", "Universalidad", "Diversidad", "Adaptación biológica"], correctAnswer: 2 },
+    { text: "Si se analiza cómo el lenguaje de un grupo refleja su visión del mundo, se está utilizando principalmente la perspectiva de:", options: ["Adaptación", "Cultura y Biología", "Comunicación", "Universalidad"], correctAnswer: 2 },
+    { text: "El relativismo cultural, como perspectiva, nos invita a:", options: ["Juzgar inmediatamente las costumbres ajenas con nuestros propios valores.", "Considerar que todas las prácticas culturales son moralmente aceptables sin crítica.", "Suspender el juicio y entender las prácticas culturales en su propio contexto.", "Imponer nuestra cultura a otros grupos por considerarla superior."], correctAnswer: 2 },
+    { text: "La antropología, al estudiar las 'costumbres', se interesa por:", options: ["Leyes escritas únicamente.", "Prácticas habituales y tradiciones de un grupo social.", "Eventos únicos e irrepetibles exclusivamente.", "Las costumbres de los animales no humanos."], correctAnswer: 1 },
+    { text: "El estudio de la 'cultura' en antropología incluye el análisis de:", options: ["Solo las expresiones artísticas de élite.", "Un amplio espectro de conocimientos, creencias y comportamientos aprendidos.", "Únicamente los artefactos materiales.", "Los instintos humanos básicos."], correctAnswer: 1 },
+    { text: "La relación entre 'cultura y biología' es un tema antropológico porque:", options: ["La cultura es un rasgo puramente biológico.", "La biología no tiene nada que ver con el comportamiento humano.", "Ambas se influyen: la biología habilita la cultura y la cultura puede influir en la biología a largo plazo.", "La cultura es superior a la biología."], correctAnswer: 2 },
+    { text: "El concepto de 'holismo' se opone a una visión:", options: ["Integral y conectada.", "Reduccionista y fragmentada.", "Comparativa entre culturas.", "Evolutiva de la sociedad."], correctAnswer: 1 },
+    { text: "La capacidad humana para el lenguaje es un aspecto biológico, pero las lenguas específicas son culturales. Este es un ejemplo de la interacción entre:", options: ["Diversidad y Universalidad", "Cultura y Biología", "Adaptación y Comunicación", "Relativismo y Holismo"], correctAnswer: 1 }
+]
+            },
+            "cultura_antropologica": {
+                title: "2. Concepto Antropológico de Cultura 🎭",
+                summaryTitle: "Definiendo la Cultura",
+                content: [
+                    `<h3>¿Qué Entendemos por Cultura en Antropología? 🧐</h3>
+                    <p>En la antropología, la <strong>CULTURA</strong> no se limita solo a las artes refinadas o las tradiciones folclóricas que podríamos ver en un museo. Es un concepto mucho más amplio y fundamental: se refiere a un <strong>conjunto de aspectos que determinan las formas de vida</strong> de un grupo humano o una sociedad. Abarca prácticamente todos los aspectos de la vida humana que son aprendidos y compartidos, y que no son estrictamente biológicos o instintivos.</p>
+                    <div class="concept-box">
+                        <strong>Definición Central:</strong> La cultura es todo aquello que el ser humano aprende y comparte como miembro de una sociedad, y que modela su manera de vivir y entender el mundo.
+                    </div>
+                    <p>Es, en esencia, el "software" social que guía nuestro comportamiento, nuestras creencias y nuestra interpretación de la realidad que nos rodea.</p>`,
+                    `<h3>Componentes de la Cultura 🧱</h3>
+                    <p>La cultura de una sociedad es un sistema complejo que incluye diversos elementos interrelacionados. Algunos de los más importantes son:</p>
+                    <ul>
+                        <li><strong>Normas y Valores:</strong> Son las reglas (explícitas o implícitas) sobre cómo deben comportarse las personas en diversas situaciones, y los ideales o principios que una sociedad considera importantes y deseables. 📜</li>
+                        <li><strong>Creencias:</strong> Ideas compartidas sobre cómo es el mundo, la naturaleza de la realidad, la existencia (o no) de lo sobrenatural, el propósito de la vida, etc. 🙏</li>
+                        <li><strong>Lenguaje:</strong> Un sistema de comunicación simbólica (puede ser hablado, escrito, gestual) que es esencial para la cohesión del grupo y, crucialmente, para la transmisión de la cultura de una generación a otra. 🗣️</li>
+                        <li><strong>Arte y Símbolos:</strong> Incluye las expresiones creativas (música, danza, pintura, etc.) y también objetos, gestos o signos que tienen significados particulares y compartidos dentro de una cultura. 🎨</li>
+                        <li><strong>Costumbres y Tradiciones:</strong> Prácticas sociales habituales, rituales y ceremonias que se transmiten a lo largo del tiempo y que a menudo marcan eventos importantes o refuerzan la identidad del grupo. 🎉</li>
+                        <li><strong>Cocina y Gastronomía:</strong> Las formas de obtener, preparar, presentar y consumir alimentos, que no solo satisfacen una necesidad biológica, sino que también reflejan la historia, el entorno y la identidad cultural de un pueblo. 🍲</li>
+                        <li><strong>Moda y Vestimenta:</strong> Las maneras de vestir y adornar el cuerpo, que pueden indicar estatus social, edad, género, pertenencia a un grupo, o adaptarse a condiciones ambientales, siempre dentro de un marco cultural. 👕</li>
+                    </ul>`,
+                    `<h3>El Ser Humano: Un Ser Cultural por Naturaleza 🧍‍♀️🧍‍♂️</h3>
+                    <p>Existen razones clave por las cuales el ser humano es considerado fundamentalmente un <strong>ser cultural</strong>:</p>
+                    <ol type="A">
+                        <li><strong>Aprendizaje y Transmisión Cultural:</strong> A diferencia de muchos animales cuyo comportamiento es mayormente instintivo, los humanos dependemos masivamente del aprendizaje. A través de la <strong>socialización</strong> (un proceso que comienza en la infancia y dura toda la vida), aprendemos las normas, los valores, las creencias, las habilidades y las expectativas de nuestra sociedad. Esta cultura se transmite de generación en generación, no genéticamente, sino a través de la enseñanza y la imitación.</li>
+                        <li><strong>Influencia en Percepciones y Comportamientos:</strong> La cultura moldea profundamente cómo vemos el mundo (nuestra percepción de la realidad) y cómo reaccionamos e interactuamos ante diferentes situaciones y personas. Esto se manifiesta en aspectos tan variados como nuestros comportamientos cotidianos, nuestros gustos (en comida, música, arte), nuestras expresiones emocionales, y nuestras expectativas en las relaciones personales y sociales.</li>
+                        <li><strong>Construcción de la Identidad y la Personalidad:</strong> Nuestra idea de "quiénes somos" (identidad individual y colectiva) y las características que conforman nuestra personalidad se construyen en gran medida culturalmente. Las interacciones con la familia, los amigos, la comunidad, la educación formal y los mensajes de los medios de comunicación son cruciales en este proceso de forjar nuestra identidad y nuestro lugar en la sociedad.</li>
+                    </ol>
+                    <p>Somos, por tanto, producto y productores de cultura simultáneamente: la heredamos, la vivimos, la modificamos y la transmitimos.</p>`
+                ],
+                questions: [
+    // Las 12 preguntas originales (revisadas y con comas correctas)
+    { text: "¿Cómo define la antropología a la cultura, según el texto?", options: ["Exclusivamente como las bellas artes y las tradiciones ancestrales.", "Un conjunto de aspectos que determinan las formas de vida de un grupo o sociedad.", "Únicamente el lenguaje y las creencias religiosas de un pueblo.", "Los rasgos biológicos distintivos de una población humana."], correctAnswer: 1 },
+    { text: "¿Cuál de los siguientes elementos NO se menciona explícitamente como parte de la cultura de una sociedad?", options: ["Normas y valores", "Creencias y lenguaje", "Instintos genéticamente determinados", "Moda y vestimenta"], correctAnswer: 2 },
+    { text: "El ser humano es considerado un 'ser cultural' principalmente debido a su:", options: ["Capacidad biológica innata para la supervivencia solitaria.", "Dependencia masiva del aprendizaje y la transmisión cultural mediante la socialización.", "Conjunto fijo de instintos que dictan todo su comportamiento.", "Aislamiento social que fomenta la individualidad pura."], correctAnswer: 1 },
+    { text: "¿Cómo influye la cultura en nuestras percepciones y comportamientos?", options: ["No tiene ninguna influencia significativa, ya que la percepción es puramente objetiva.", "Solo afecta los gustos artísticos y las preferencias alimentarias exóticas.", "Moldea profundamente cómo vemos el mundo y cómo reaccionamos e interactuamos en él.", "Únicamente determina las leyes y normas formales de una sociedad."], correctAnswer: 2 },
+    { text: "La construcción de la identidad y la personalidad de un individuo está influenciada por:", options: ["Factores puramente genéticos y hereditarios, sin intervención cultural.", "Un proceso individual y aislado, independiente de las relaciones sociales.", "Las interacciones con la familia, amigos, educación y medios de comunicación, dentro de un marco cultural.", "Exclusivamente por el sistema económico en el que nace."], correctAnswer: 2 },
+    { text: "El proceso mediante el cual aprendemos las normas, valores y creencias de nuestra sociedad se denomina:", options: ["Adaptación biológica", "Socialización", "Evolución genética", "Determinismo cultural"], correctAnswer: 1 },
+    { text: "Según el texto, ¿qué abarca el concepto antropológico de cultura?", options: ["Solo las expresiones artísticas consideradas 'alta cultura'.", "Todos los aspectos de la vida humana que son aprendidos y compartidos.", "Únicamente las tradiciones y costumbres que han perdurado por siglos.", "Solo las normas y leyes escritas que rigen una sociedad."], correctAnswer: 1 },
+    { text: "La cocina y la gastronomía de un pueblo son consideradas:", options: ["Una necesidad puramente biológica sin relevancia cultural.", "Una manifestación importante de la identidad cultural.", "Un aspecto universal idéntico en todas las sociedades.", "Algo aprendido individualmente sin influencia social."], correctAnswer: 1 },
+    { text: "El lenguaje es crucial para la cultura porque permite principalmente:", options: ["La expresión de emociones básicas universales.", "La transmisión de la cultura entre generaciones.", "El desarrollo de habilidades físicas superiores.", "La adaptación biológica al medio ambiente."], correctAnswer: 1 },
+    { text: "Nuestra idea de 'quiénes somos' y nuestro lugar en la sociedad se forma a través de un proceso de:", options: ["Determinación genética", "Construcción cultural y social", "Elección puramente individual y aislada", "Influencia económica exclusiva"], correctAnswer: 1 },
+    { text: "¿Cuál es la relación del ser humano con la cultura, según la última parte del resumen?", options: ["Es solo un receptor pasivo de la cultura.", "Es solo un productor de nueva cultura, sin heredarla.", "Es producto y productor de cultura simultáneamente.", "Es completamente independiente de la cultura."], correctAnswer: 2 },
+    { text: "Las normas y valores en una cultura se refieren a:", options: ["Las leyes escritas únicamente.", "Las preferencias artísticas individuales.", "Reglas sobre cómo comportarse e ideales importantes.", "Las características biológicas de sus miembros."], correctAnswer: 2 },
+    // Comienzan las 18 preguntas adicionales
+    { text: "Según la antropología, la cultura abarca:", options: ["Solamente las expresiones artísticas y tradiciones.", "Un conjunto limitado de normas sociales.", "Todos los aspectos de la vida humana que son aprendidos y compartidos.", "Principalmente los aspectos biológicos de un grupo."], correctAnswer: 2 },
+    { text: "El hecho de que la cultura no se limite 'solo a las artes o las tradiciones' implica que es un concepto:", options: ["Restringido y elitista.", "Amplio y holístico.", "Obsoleto en el mundo moderno.", "Exclusivamente material."], correctAnswer: 1 },
+    { text: "¿Cuál de estos elementos NO es un componente de la cultura mencionado en la lista del resumen?", options: ["Creencias", "Lenguaje", "Reflejos instintivos", "Cocina y gastronomía"], correctAnswer: 2 },
+    { text: "El proceso de aprender y transmitir la cultura de una generación a otra se llama:", options: ["Determinismo genético", "Evolución biológica", "Socialización y transmisión cultural", "Aislamiento individual"], correctAnswer: 2 },
+    { text: "Nuestra percepción de 'cómo vemos el mundo' está influenciada por:", options: ["Únicamente nuestros genes.", "Factores económicos exclusivamente.", "La cultura en la que crecemos.", "Leyes físicas universales."], correctAnswer: 2 },
+    { text: "La formación de la 'identidad y personalidad' se ve afectada por:", options: ["Solo la herencia biológica.", "Las relaciones con familia, amigos, educación y medios, en un contexto cultural.", "Un desarrollo puramente individual sin influencias externas.", "La geografía del lugar de nacimiento únicamente."], correctAnswer: 1 },
+    { text: "Las 'normas y valores' de una cultura son importantes porque:", options: ["Son idénticas en todas las sociedades del mundo.", "Guían el comportamiento y definen lo que es importante para un grupo.", "Solo se aplican a las ceremonias religiosas.", "Son puramente decorativas y sin función práctica."], correctAnswer: 1 },
+    { text: "El 'lenguaje' es un componente crucial de la cultura porque:", options: ["Es la única forma de expresión artística.", "Permite la comunicación y la transmisión de conocimientos y tradiciones.", "Determina la inteligencia de un grupo.", "Solo sirve para nombrar objetos materiales."], correctAnswer: 1 },
+    { text: "Las 'costumbres y tradiciones' de una sociedad representan:", options: ["Leyes estrictas que no pueden cambiar.", "Prácticas habituales y rituales transmitidos socialmente.", "Comportamientos biológicamente programados.", "Modas pasajeras sin significado profundo."], correctAnswer: 1 },
+    { text: "Cuando el texto dice que el ser humano es 'producto y productor de cultura simultáneamente', significa que:", options: ["La cultura es estática y no cambia.", "Los humanos solo heredan la cultura pasivamente.", "Los humanos aprenden la cultura, la viven, la pueden modificar y la transmiten.", "La cultura es independiente de la acción humana."], correctAnswer: 2 },
+    { text: "Un ejemplo de cómo la cultura influye en los 'comportamientos' es:", options: ["La necesidad de dormir.", "Nuestros gustos en comida y arte.", "El color de nuestros ojos.", "La capacidad de respirar."], correctAnswer: 1 },
+    { text: "La 'socialización' es un proceso que:", options: ["Termina en la infancia.", "Ocurre principalmente a través de la herencia genética.", "Dura toda la vida y nos enseña a ser miembros de una sociedad.", "Es exclusivo de las sociedades no industrializadas."], correctAnswer: 2 },
+    { text: "El concepto antropológico de cultura es más amplio que la idea común de cultura como 'bellas artes' porque:", options: ["Incluye también la ciencia y la tecnología.", "Abarca todas las formas de vida aprendidas y compartidas por un grupo.", "Se centra solo en las culturas 'primitivas'.", "Ignora las tradiciones y costumbres."], correctAnswer: 1 },
+    { text: "La moda y la vestimenta, como componentes culturales, pueden indicar:", options: ["Únicamente la clase social.", "Estatus, identidad o pertenencia a un grupo, entre otros aspectos.", "Solo la adaptación al clima.", "Una elección puramente individual sin influencia social."], correctAnswer: 1 },
+    { text: "Las 'creencias' compartidas en una sociedad se refieren a:", options: ["Solo a las religiones organizadas.", "Ideas sobre la realidad, el mundo y lo sobrenatural.", "Conocimientos científicos comprobados únicamente.", "Preferencias personales sobre el arte."], correctAnswer: 1 },
+    { text: "La transmisión cultural se diferencia de la transmisión genética en que la primera es principalmente a través de:", options: ["El ADN.", "El aprendizaje y la socialización.", "Los instintos.", "La herencia biológica de los padres."], correctAnswer: 1 },
+    { text: "Afirmar que la cultura es como el 'software social' sugiere que:", options: ["Es rígida e inmutable como un programa de computadora.", "Guía y organiza el comportamiento y la interpretación del mundo de los individuos.", "Solo se aplica a sociedades tecnológicamente avanzadas.", "Es un producto puramente artificial y no tiene raíces en la experiencia humana."], correctAnswer: 1 },
+    { text: "Entender la cultura de una sociedad es fundamental para comprender:", options: ["Solamente su producción artística.", "Las formas de vida y comportamientos de sus miembros.", "Únicamente su sistema político y económico.", "Solo su historia antigua, no su presente."], correctAnswer: 1 }
+]
+            },
+            "diversidad_cultural": {
+                title: "3. Diversidad Cultural 🌈",
+                summaryTitle: "Apreciando la Diversidad Cultural",
+                content: [
+                    `<h3>La Riqueza de la Variedad Humana 🎨</h3>
+                    <p>La <strong>diversidad cultural</strong> se refiere a la multiplicidad de formas en que se expresan las culturas de los grupos y sociedades. Estas expresiones se transmiten dentro y entre los grupos y sociedades.</p>
+                    <p>La importancia de la diversidad cultural radica en varios aspectos fundamentales:</p>
+                    <h4>A. Enriquecimiento Personal y Colectivo</h4>
+                    <p>El contacto con diferentes culturas es una fuente invaluable de enriquecimiento. Nos permite:</p>
+                    <ul>
+                        <li>Intercambiar <strong>ideas, conocimientos y experiencias</strong> diversas.</li>
+                        <li>Ampliar nuestra <strong>perspectiva</strong> del mundo, ayudándonos a comprenderlo de manera más profunda y matizada.</li>
+                        <li>Fomentar la <strong>creatividad</strong> y la innovación al exponernos a nuevas formas de pensar y solucionar problemas.</li>
+                    </ul>
+                    <div class="concept-box">
+                        <strong>Idea Clave:</strong> La diversidad no es un obstáculo, sino un motor para el crecimiento personal y el desarrollo de la sociedad.
+                    </div>`,
+                    `<h3>Fomentando la Comprensión y la Colaboración 🤝</h3>
+                    <h4>B. Desarrollo de la Empatía</h4>
+                    <p>Aprender sobre otras culturas, sus valores, sus historias y sus desafíos, puede mejorar significativamente nuestra <strong>capacidad para entender a otras personas</strong> (empatía). Este entendimiento es crucial para:</p>
+                    <ul>
+                        <li>Superar <strong>prejuicios y estereotipos</strong> negativos que a menudo surgen del desconocimiento o la simplificación excesiva de otras realidades culturales.</li>
+                        <li>Construir puentes de comunicación y respeto entre diferentes grupos.</li>
+                    </ul>
+                    <h4>C. Resolución de Problemas Globales</h4>
+                    <p>En un mundo cada vez más interconectado, los desafíos que enfrentamos (climáticos, sanitarios, económicos, sociales) son a menudo globales y complejos. La diversidad cultural aporta:</p>
+                    <ul>
+                        <li>Una multiplicidad de <strong>enfoques y soluciones</strong> a problemas comunes, basados en diferentes experiencias históricas y conocimientos tradicionales.</li>
+                        <li>Una mayor capacidad de adaptación y resiliencia como especie.</li>
+                    </ul>`,
+                    `<h3>Valorando la Diversidad en la Práctica 🙏</h3>
+                    <p>Para que la diversidad cultural sea verdaderamente beneficiosa, es necesario cultivarla y valorarla activamente:</p>
+                    <h4>A. Reconocer la Igualdad Fundamental</h4>
+                    <p>A pesar de nuestras evidentes diferencias culturales (idioma, vestimenta, costumbres, creencias), es fundamental reconocer que todos los seres humanos compartimos <strong>necesidades básicas, esperanzas, sueños y una dignidad inherente</strong> similares. Reconocer esta igualdad subyacente es esencial para fomentar el <strong>respeto mutuo</strong> y la convivencia pacífica.</p>
+                    <h4>B. Apreciación Activa de la Diversidad</h4>
+                    <p>Aprender sobre otras culturas puede ser una experiencia increíblemente <strong>enriquecedora y placentera</strong>. Nos permite descubrir y apreciar la <strong>belleza, la sabiduría y la creatividad</strong> que cada cultura aporta al mosaico de la humanidad. Esto implica una actitud de curiosidad y apertura.</p>
+                    <h4>C. Evitar el Etnocentrismo y Cultivar el Relativismo Cultural</h4>
+                    <p>Es crucial evitar el <strong>etnocentrismo</strong>, que es la creencia de que la propia cultura es el centro del universo y el estándar por el cual todas las demás deben ser juzgadas (generalmente considerándola superior).</p>
+                    <p>En su lugar, debemos esforzarnos por adoptar una perspectiva de <strong>relativismo cultural</strong> (moderado y crítico), que implica entender que cada cultura tiene su propio contexto, su propia lógica interna y su propia historia, y que sus prácticas y creencias deben ser comprendidas dentro de ese marco antes de ser evaluadas. Esto no significa aceptar acríticamente todas las prácticas, sino primero comprenderlas en sus propios términos.</p>`
+                ],
+                questions: [
+    // Las 12 preguntas que ya teníamos (revisadas y con comas correctas)
+    { text: "¿Qué permite el contacto con diferentes culturas según el texto?", options: ["Limitar nuestra perspectiva del mundo.", "El intercambio de ideas, conocimientos y experiencias.", "Reforzar los estereotipos existentes.", "Aislar las tradiciones propias."], correctAnswer: 1 },
+    { text: "Aprender sobre otras culturas puede ayudarnos principalmente a:", options: ["Confirmar la superioridad de nuestra propia cultura.", "Superar prejuicios y estereotipos.", "Ignorar las diferencias culturales.", "Aumentar la competencia entre grupos."], correctAnswer: 1 },
+    { text: "¿Por qué es la diversidad cultural esencial en un mundo interconectado para la resolución de problemas?", options: ["Porque simplifica los problemas al ofrecer una única solución.", "Porque aporta diferentes enfoques y soluciones a problemas comunes.", "Porque elimina la necesidad de colaborar con otros.", "Porque fomenta el aislamiento cultural."], correctAnswer: 1 },
+    { text: "Para fomentar el respeto mutuo entre culturas, es esencial reconocer que:", options: ["Todas las culturas deben aspirar a ser idénticas.", "Algunas culturas son inherentemente superiores a otras.", "Todos los seres humanos comparten necesidades y esperanzas similares, a pesar de las diferencias.", "Las diferencias culturales son barreras insuperables para el entendimiento."], correctAnswer: 2 },
+    { text: "La creencia de que la propia cultura es superior a las demás se denomina:", options: ["Relativismo cultural", "Etnocentrismo", "Empatía cultural", "Universalismo cultural"], correctAnswer: 1 },
+    { text: "Adoptar una perspectiva de relativismo cultural implica principalmente:", options: ["Juzgar todas las culturas estrictamente según los estándares de la propia.", "Aceptar todas las prácticas culturales sin ningún tipo de cuestionamiento.", "Entender que cada cultura tiene su propio contexto y lógica interna antes de evaluarla.", "Ignorar las diferencias culturales y asumir que todos somos iguales en prácticas."], correctAnswer: 2 },
+    { text: "¿Cuál es un beneficio del enriquecimiento personal que aporta la diversidad cultural?", options: ["Reduce la creatividad al confundir las ideas.", "Fomenta la creatividad y la innovación.", "Limita la capacidad de comprender el mundo.", "Hace que las personas sean menos empáticas."], correctAnswer: 1 },
+    { text: "Según el texto, ¿qué es el etnocentrismo?", options: ["La capacidad de apreciar todas las culturas por igual.", "La creencia de que la propia cultura es el estándar y superior a otras.", "El estudio científico de las etnias.", "La mezcla de diferentes culturas en una sociedad global."], correctAnswer: 1 },
+    { text: "La apreciación de la diversidad cultural nos permite:", options: ["Identificar las culturas 'primitivas' y 'avanzadas'.", "Valorar la belleza y sabiduría que cada cultura aporta al mundo.", "Establecer un ranking de las mejores culturas.", "Forzar a otras culturas a adoptar nuestras costumbres."], correctAnswer: 1 },
+    { text: "Superar prejuicios y estereotipos es un resultado de:", options: ["Aislarse de otras culturas.", "Reforzar las ideas preconcebidas.", "Aprender sobre otras culturas y desarrollar empatía.", "Criticar abiertamente las costumbres ajenas."], correctAnswer: 2 },
+    { text: "El intercambio de ideas, conocimientos y experiencias es una consecuencia directa de:", options: ["El etnocentrismo.", "El contacto con diferentes culturas.", "El aislamiento cultural.", "La negación de la diversidad."], correctAnswer: 1 },
+    { text: "Comprender el mundo de manera más profunda y matizada es un beneficio de:", options: ["El enriquecimiento personal a través de la diversidad cultural.", "La creencia en la superioridad de la propia cultura.", "La evitación del contacto con culturas diferentes.", "El mantenimiento de los prejuicios."], correctAnswer: 0 },
+    // Comienzan las 18 preguntas adicionales
+    { text: "La diversidad cultural enriquece nuestro mundo al permitir el intercambio de:", options: ["Únicamente bienes materiales.", "Ideas, conocimientos y experiencias.", "Solo información científica.", "Críticas negativas entre culturas."], correctAnswer: 1 },
+    { text: "Ampliar nuestra perspectiva y comprender mejor el mundo son resultados de:", options: ["Aislarse de otras culturas.", "El contacto con diferentes culturas.", "Imponer la propia cultura.", "Ignorar la diversidad cultural."], correctAnswer: 1 },
+    { text: "La capacidad de entender a otras personas y superar prejuicios se ve mejorada por:", options: ["El etnocentrismo.", "Aprender sobre otras culturas y desarrollar empatía.", "La homogeneización cultural.", "El desinterés por otras formas de vida."], correctAnswer: 1 },
+    { text: "En un mundo interconectado, la diversidad cultural es esencial para la resolución de problemas porque:", options: ["Ofrece una única solución estandarizada.", "Aporta diferentes enfoques y soluciones.", "Elimina la necesidad de buscar soluciones.", "Complica innecesariamente la búsqueda de soluciones."], correctAnswer: 1 },
+    { text: "Reconocer la igualdad fundamental entre todos los seres humanos, a pesar de las diferencias culturales, es esencial para:", options: ["Establecer una jerarquía cultural.", "Fomentar el respeto mutuo.", "Promover el etnocentrismo.", "Eliminar todas las diferencias culturales."], correctAnswer: 1 },
+    { text: "Apreciar la belleza y la sabiduría que cada cultura aporta al mundo es parte de:", options: ["La valoración de la diversidad cultural.", "El etnocentrismo.", "La negación de las diferencias.", "El relativismo cultural extremo."], correctAnswer: 0 },
+    { text: "Evitar el etnocentrismo significa:", options: ["Considerar la propia cultura como la única válida.", "No creer que la propia cultura es superior y entender otras en su contexto.", "Ignorar por completo la propia cultura.", "Juzgar todas las culturas con los mismos parámetros de la nuestra."], correctAnswer: 1 },
+    { text: "Adoptar una perspectiva relativista implica, según el resumen:", options: ["Aceptar todas las prácticas culturales sin crítica alguna.", "Comprender las culturas en su propio contexto antes de evaluarlas.", "Creer que no existen valores universales.", "Considerar que todas las culturas son idénticas en el fondo."], correctAnswer: 1 },
+    { text: "El intercambio de ideas, conocimientos y experiencias entre culturas fomenta:", options: ["La creatividad y la innovación.", "El estancamiento cultural.", "La pérdida de identidad propia.", "El aumento de prejuicios."], correctAnswer: 0 },
+    { text: "Superar prejuicios y estereotipos es un paso importante para:", options: ["Mantener la propia cultura pura.", "Construir puentes de comunicación y respeto.", "Confirmar la validez de los estereotipos.", "Limitar el enriquecimiento personal."], correctAnswer: 1 },
+    { text: "La diversidad cultural aporta una multiplicidad de enfoques a problemas comunes basados en:", options: ["Una única experiencia histórica global.", "Diferentes experiencias históricas y conocimientos tradicionales.", "La superioridad de un solo enfoque cultural.", "La negación de los conocimientos tradicionales."], correctAnswer: 1 },
+    { text: "Compartir necesidades, esperanzas y sueños similares es una base para:", options: ["La competencia cultural.", "El reconocimiento de la igualdad fundamental entre seres humanos.", "La imposición de una cultura sobre otra.", "El aislamiento de los grupos culturales."], correctAnswer: 1 },
+    { text: "Una actitud de curiosidad y apertura hacia otras culturas es fundamental para:", options: ["El etnocentrismo.", "La apreciación activa de la diversidad.", "El mantenimiento de estereotipos.", "La crítica destructiva de otras culturas."], correctAnswer: 1 },
+    { text: "El relativismo cultural (moderado y crítico) nos ayuda a:", options: ["Juzgar rápidamente las prácticas ajenas.", "Comprender las prácticas y creencias de una cultura dentro de su propio marco.", "Ignorar el contexto histórico de las culturas.", "Creer que nuestra cultura es la medida de todas las demás."], correctAnswer: 1 },
+    { text: "La diversidad cultural es considerada un motor para:", options: ["El conflicto inevitable.", "El crecimiento personal y el desarrollo social.", "La uniformidad global.", "La pérdida de valores tradicionales."], correctAnswer: 1 },
+    { text: "La capacidad de adaptación y resiliencia como especie puede verse fortalecida por:", options: ["La homogeneidad cultural.", "La diversidad cultural y sus múltiples soluciones.", "El aislamiento de los grupos humanos.", "La negación de los problemas globales."], correctAnswer: 1 },
+    { text: "Tratar a cada persona con dignidad y respeto, independientemente de sus diferencias, es una manifestación de:", options: ["Etnocentrismo.", "Valoración de la diversidad.", "Indiferencia cultural.", "Superioridad cultural."], correctAnswer: 1 },
+    { text: "El texto sugiere que el relativismo cultural debe ser:", options: ["Absoluto y sin críticas.", "Moderado y crítico, entendiendo el contexto.", "Rechazado en favor del etnocentrismo.", "Aplicado solo a culturas consideradas 'inferiores'."], correctAnswer: 1 }
+]
+            },
+            "sociologia": {
+                title: "4. La Sociología 👥",
+                summaryTitle: "Entendiendo la Sociología",
+                content: [
+                    `<h3>¿Qué es la Sociología? 🧐</h3>
+                    <p>La <strong>SOCIOLOGÍA</strong> es la ciencia que se enfoca en el estudio sistemático de la sociedad humana. Su principal interés radica en:</p>
+                    <ul>
+                        <li>Cómo las personas se <strong>relacionan entre sí</strong> (interacción social).</li>
+                        <li>Cómo se <strong>organizan en sociedades</strong> (estructuras sociales, grupos, instituciones).</li>
+                        <li>Cómo estas relaciones y organizaciones <strong>afectan el comportamiento humano</strong> y, a su vez, cómo el comportamiento humano las afecta y transforma.</li>
+                    </ul>
+                    <div class="concept-box">
+                        <strong>Enfoque Principal:</strong> La sociología busca desentrañar los patrones y procesos sociales que dan forma a nuestras vidas, desde encuentros cotidianos hasta grandes transformaciones globales.
+                    </div>`,
+                    `<h3>El Ser Humano como Ser Social 🧍‍♀️↔️🧍‍♂️</h3>
+                    <p>La sociología parte de la premisa de que el ser humano es un <strong>ser social</strong> por naturaleza y necesidad. Algunas razones clave que fundamentan esta perspectiva son:</p>
+                    <ul>
+                        <li><strong>Necesidades Emocionales y Psicológicas:</strong> Los humanos tenemos una necesidad innata de pertenencia, afecto, reconocimiento y conexión con otros para nuestro bienestar mental y emocional.</li>
+                        <li><strong>Aprendizaje Social:</strong> Gran parte de lo que somos y sabemos lo aprendemos de otros a través de la interacción y la observación en contextos sociales.</li>
+                        <li><strong>Cooperación y Supervivencia:</strong> Históricamente y en la actualidad, la cooperación en grupo ha sido fundamental para la supervivencia de la especie humana, permitiendo abordar tareas y desafíos que serían imposibles individualmente.</li>
+                        <li><strong>Construcción de Identidad:</strong> Nuestra identidad (quiénes somos) se forma en gran medida a través de cómo nos ven los demás y de nuestra pertenencia a diferentes grupos sociales.</li>
+                    </ul>`,
+                    `<h3>El Proceso de Socialización 👶👵</h3>
+                    <p>La <strong>SOCIALIZACIÓN</strong> es un concepto central en sociología. Se define como un proceso continuo mediante el cual los individuos aprendemos e interiorizamos las <strong>normas, valores, habilidades, conocimientos y comportamientos</strong> que son esenciales para vivir y participar de manera efectiva en nuestra comunidad o sociedad.</p>
+                    <p>Es importante destacar que:</p>
+                    <ul>
+                        <li>Aunque la sociedad influye poderosamente en el individuo a través de la socialización, esta no es una vía de un solo sentido.</li>
+                        <li>Las personas también <strong>contribuyen, negocian y modifican activamente su sociedad</strong> y su cultura a través de sus acciones, decisiones e interacciones.</li>
+                        <li>Los individuos pueden influir en el cambio social, cultural y político, desafiando normas o proponiendo nuevas ideas.</li>
+                    </ul>`,
+                    `<h3>Agentes de la Socialización 👨‍👩‍👧‍👦🏫🤝⛪🏛️📺</h3>
+                    <p>La socialización ocurre a través de la influencia de diversos <strong>agentes</strong> o instituciones sociales. Los más destacados son:</p>
+                    <ul>
+                        <li><strong>Familia:</strong> Generalmente el primer y más influyente agente, donde se aprenden las primeras normas, valores, el lenguaje y los roles básicos.</li>
+                        <li><strong>Educación (Escuela):</strong> Transmite conocimientos formales, pero también normas de comportamiento, valores cívicos y habilidades sociales.</li>
+                        <li><strong>Amigos (Grupo de Pares):</strong> Especialmente influyentes durante la adolescencia, proporcionan un espacio para aprender sobre relaciones igualitarias, probar identidades y, a veces, desafiar normas adultas.</li>
+                        <li><strong>Religión:</strong> Proporciona un marco de creencias, valores morales y rituales que guían el comportamiento de sus adherentes.</li>
+                        <li><strong>Gobierno y Leyes:</strong> Establecen normas formales de conducta y ejercen control social a través de instituciones políticas y legales.</li>
+                        <li><strong>Medios de Comunicación y Redes Sociales (RRSS):</strong> Tienen un impacto creciente en la formación de opiniones, la difusión de información (y desinformación), la construcción de identidades y la socialización en general.</li>
+                    </ul>
+                    <p>Estos agentes actúan de manera interrelacionada y, a veces, contradictoria a lo largo de la vida de una persona.</p>`
+                ],
+                questions: [
+    // Las 12 preguntas que ya teníamos (revisadas y con comas correctas)
+    { text: "¿Cuál es el objeto de estudio principal de la sociología?", options: ["La estructura interna de los organismos vivos.", "Cómo las personas se relacionan, se organizan en sociedades y cómo esto afecta su comportamiento.", "Las leyes de la física que gobiernan el universo.", "La historia del arte y la literatura universal."], correctAnswer: 1 },
+    { text: "Según la sociología, el ser humano es considerado fundamentalmente un:", options: ["Ser puramente instintivo e individualista.", "Ser social que necesita la interacción y el grupo.", "Ser completamente determinado por la genética.", "Ser aislado que no requiere de otros para su desarrollo."], correctAnswer: 1 },
+    { text: "El proceso mediante el cual aprendemos normas, valores y comportamientos esenciales para vivir en comunidad se llama:", options: ["Individualización extrema", "Adaptación biológica pura", "Socialización", "Globalización económica"], correctAnswer: 2 },
+    { text: "¿Cuál de los siguientes NO es considerado un agente de socialización según el material proporcionado?", options: ["La familia", "La educación formal", "El clima y la geografía", "Los medios de comunicación y redes sociales"], correctAnswer: 2 },
+    { text: "La socialización es un proceso que:", options: ["Solo ocurre durante la infancia y termina en la adolescencia.", "Es unidireccional, donde la sociedad moldea al individuo sin que este pueda influir.", "Implica que los individuos también pueden contribuir y modificar su sociedad.", "Está completamente determinado por factores económicos."], correctAnswer: 2 },
+    { text: "Las necesidades emocionales y psicológicas, como la pertenencia y el afecto, son una razón por la que el ser humano es considerado un ser:", options: ["Racional", "Biológico", "Social", "Económico"], correctAnswer: 2 },
+    { text: "El aprendizaje de roles básicos, el lenguaje y los primeros valores suele ocurrir principalmente a través de qué agente de socialización?", options: ["Los medios de comunicación", "El gobierno", "La familia", "El grupo de pares"], correctAnswer: 2 },
+    { text: "El texto indica que, aunque la sociedad influye en el individuo, este también puede:", options: ["Resistirse a cualquier tipo de cambio social.", "Influir en el cambio social, cultural y político.", "Ignorar completamente las normas sociales sin consecuencias.", "Vivir completamente aislado de la sociedad."], correctAnswer: 1 },
+    { text: "¿Cuál de estos agentes de socialización ha ganado un impacto creciente en la formación de opiniones y la construcción de identidades en tiempos recientes?", options: ["La religión tradicional", "La familia extensa", "Los medios de comunicación y Redes Sociales", "El gobierno local"], correctAnswer: 2 },
+    { text: "La cooperación en grupo para la supervivencia es un ejemplo de por qué el ser humano es un:", options: ["Ser competitivo por naturaleza.", "Ser social y colaborativo.", "Ser independiente y autosuficiente.", "Ser dominado por instintos primarios."], correctAnswer: 1 },
+    { text: "La transmisión de conocimientos formales y normas de comportamiento cívico es una función importante de la:", options: ["Familia", "Educación (Escuela)", "Religión", "Amigos"], correctAnswer: 1 },
+    { text: "Según el texto, ¿la influencia de los agentes de socialización es siempre coherente y unificada?", options: ["Sí, todos los agentes transmiten exactamente los mismos mensajes.", "No, a veces pueden actuar de manera contradictoria.", "Sí, están perfectamente coordinados por el gobierno.", "No se menciona este aspecto en el resumen."], correctAnswer: 1 },
+    // Comienzan las 18 preguntas adicionales
+    { text: "La sociología es definida como la ciencia que estudia principalmente:", options: ["El comportamiento individual aislado.", "Las relaciones sociales y la organización de las sociedades.", "La composición química de los seres vivos.", "Los fenómenos astronómicos y sus leyes."], correctAnswer: 1 },
+    { text: "Una premisa fundamental de la sociología es que el ser humano es un ser:", options: ["Totalmente independiente de su entorno.", "Social por naturaleza y necesidad.", "Guiado únicamente por instintos biológicos.", "Determinado exclusivamente por factores económicos."], correctAnswer: 1 },
+    { text: "El proceso continuo de aprendizaje e interiorización de normas y valores sociales se llama:", options: ["Adaptación genética.", "Socialización.", "Individualismo radical.", "Competencia económica."], correctAnswer: 1 },
+    { text: "El grupo de pares (amigos) es un agente de socialización especialmente influyente durante la:", options: ["Primera infancia.", "Adolescencia.", "Vida adulta temprana.", "Vejez."], correctAnswer: 1 },
+    { text: "Aunque la sociedad influye en el individuo, el texto señala que los individuos también pueden:", options: ["Ignorar completamente las estructuras sociales.", "Contribuir y modificar activamente su sociedad.", "Evitar cualquier tipo de interacción social.", "Ser pasivos y no afectar a la sociedad."], correctAnswer: 1 },
+    { text: "Las 'estructuras sociales' y los 'grupos' son parte de cómo las personas se:", options: ["Aíslan unas de otras.", "Organizan en sociedades.", "Comunican telepáticamente.", "Desarrollan biológicamente."], correctAnswer: 1 },
+    { text: "La necesidad de pertenencia y afecto es un ejemplo de las necesidades humanas de tipo:", options: ["Puramente físicas.", "Emocionales y psicológicas.", "Económicas y materiales.", "Políticas y legales."], correctAnswer: 1 },
+    { text: "El aprendizaje de 'habilidades' y 'conocimientos' para vivir en comunidad es parte del proceso de:", options: ["Maduración biológica.", "Socialización.", "Aislamiento terapéutico.", "Competencia individual."], correctAnswer: 1 },
+    { text: "El gobierno y las leyes actúan como agentes de socialización al:", options: ["Proporcionar apoyo emocional únicamente.", "Establecer normas formales de conducta y ejercer control social.", "Fomentar la desobediencia civil.", "Ignorar el comportamiento de los ciudadanos."], correctAnswer: 1 },
+    { text: "El primer y generalmente más influyente agente de socialización es:", options: ["La escuela.", "Los amigos.", "Los medios de comunicación.", "La familia."], correctAnswer: 3 },
+    { text: "La sociología busca desentrañar los patrones y procesos sociales que:", options: ["Son completamente aleatorios e impredecibles.", "Dan forma a nuestras vidas.", "Solo existen en sociedades no occidentales.", "Son irrelevantes para el comportamiento individual."], correctAnswer: 1 },
+    { text: "La cooperación en grupo para la supervivencia de la especie es una razón por la cual el ser humano es:", options: ["Un ser solitario por naturaleza.", "Un ser social.", "Un ser puramente competitivo.", "Un ser que no necesita cooperar."], correctAnswer: 1 },
+    { text: "La construcción de la identidad, es decir, 'quiénes somos', se forma en gran medida a través de:", options: ["Un proceso puramente interno e individual.", "Cómo nos ven los demás y nuestra pertenencia a grupos.", "La herencia genética exclusivamente.", "Las posesiones materiales únicamente."], correctAnswer: 1 },
+    { text: "Desafiar normas o proponer nuevas ideas son formas en que los individuos pueden:", options: ["Romper la cohesión social inevitablemente.", "Influir en el cambio social, cultural y político.", "Demostrar su incapacidad de socialización.", "Aislarse permanentemente de la sociedad."], correctAnswer: 1 },
+    { text: "Los medios de comunicación y las redes sociales tienen un impacto creciente en:", options: ["La disminución de la interacción social.", "La formación de opiniones y la construcción de identidades.", "La eliminación de todos los demás agentes de socialización.", "El fomento exclusivo de valores tradicionales."], correctAnswer: 1 },
+    { text: "La religión, como agente de socialización, proporciona a sus adherentes:", options: ["Únicamente conocimientos científicos.", "Un marco de creencias, valores morales y rituales.", "Habilidades técnicas para el trabajo.", "Una identidad política exclusivamente."], correctAnswer: 1 },
+    { text: "El estudio de cómo las 'organizaciones afectan el comportamiento humano' es un campo de la:", options: ["Biología", "Psicología individual", "Sociología", "Física"], correctAnswer: 2 },
+    { text: "El texto implica que la socialización es un proceso que:", options: ["Solo transmite información objetiva.", "Es fundamental para que los individuos puedan participar en su sociedad.", "Busca eliminar la individualidad.", "Es idéntico en todas las culturas y épocas."], correctAnswer: 1 }
+]
+            },
+            "sociedad": {
+                title: "5. Concepto de Sociedad 🏛️",
+                summaryTitle: "El Concepto de Sociedad",
+                content: [
+                    `<h3>Definiendo la Sociedad 🌍🏘️</h3>
+                    <p>Una <strong>SOCIEDAD</strong> se puede definir como un grupo de individuos que cumplen ciertas características clave:</p>
+                    <ul>
+                        <li>Comparten un <strong>espacio o territorio común</strong>, ya sea físico o, en algunos contextos modernos, virtual de manera significativa.</li>
+                        <li>Están interrelacionados y dependen unos de otros para su supervivencia y bienestar.</li>
+                        <li>Están sujetos, en gran medida, a las mismas <strong>autoridades políticas</strong> y al mismo sistema de <strong>leyes</strong>.</li>
+                        <li>Comparten un conjunto significativo de <strong>normas, valores y una cultura</strong> en general, lo que les proporciona una identidad colectiva y un marco de referencia para la interacción.</li>
+                    </ul>
+                    <div class="concept-box">
+                        <strong>En esencia:</strong> Una sociedad es más que un simple agregado de personas; es una red organizada de relaciones sociales con una estructura y una cultura compartidas.
+                    </div>`,
+                    `<h3>Componentes Clave de la Sociedad 🧩</h3>
+                    <p>Toda sociedad, para funcionar y perdurar, se compone de varios elementos o componentes interdependientes. Los más destacados son:</p>
+                    <ul>
+                        <li><strong>Cultura:</strong> El conjunto de conocimientos, creencias, arte, moral, leyes, costumbres y cualquier otra capacidad o hábito adquirido por los miembros de esa sociedad. Es el "modo de vida" del grupo.</li>
+                        <li><strong>Roles Sociales:</strong> Son los patrones de comportamiento esperados de una persona que ocupa una determinada posición o estatus dentro de la sociedad (ej. rol de madre, estudiante, médico).</li>
+                        <li><strong>Estratificación Social:</strong> Se refiere a la jerarquización o clasificación de los individuos y grupos en diferentes estratos o niveles, basada en factores como la riqueza, el poder, el prestigio, etc. Esto da lugar a desigualdades sociales.</li>
+                        <li><strong>Leyes:</strong> Normas formalmente establecidas y sancionadas por el Estado, que regulan el comportamiento y las relaciones sociales.</li>
+                        <li><strong>Instituciones Sociales:</strong> Son estructuras y mecanismos de orden social establecidos y duraderos que se centran en satisfacer necesidades sociales fundamentales. Ejemplos: la familia, el sistema educativo, el sistema económico, el gobierno, la religión.</li>
+                        <li><strong>Normas y Valores:</strong> Como parte de la cultura, las normas son reglas de conducta (formales e informales) y los valores son los ideales compartidos sobre lo que es bueno, deseable y correcto.</li>
+                    </ul>`,
+                    `<h3>Estrategias de Inclusión y Cohesión Social 🤗🔗</h3>
+                    <p>Para que una sociedad sea saludable, justa y estable, es fundamental promover la inclusión y la cohesión social.</p>
+                    <h4>A. Inclusión Social</h4>
+                    <p>La <strong>inclusión</strong> implica garantizar que todos los miembros de la sociedad, sin importar su origen, género, capacidad, etc., tengan <strong>acceso equitativo a oportunidades, recursos y derechos</strong>. Busca combatir la marginación y la discriminación.</p>
+                    <h4>B. Cohesión Social</h4>
+                    <p>La <strong>cohesión social</strong> se refiere a la <strong>fuerza de las relaciones y la solidaridad</strong> entre los miembros de una sociedad. Una sociedad cohesionada se caracteriza por un alto grado de confianza, cooperación y sentido de pertenencia compartidos.</p>
+                    <h4>Estrategias para Fomentarlas:</h4>
+                    <ul>
+                        <li><strong>Educación inclusiva y accesible:</strong> Que promueva la igualdad de oportunidades y el respeto a la diversidad desde temprana edad.</li>
+                        <li><strong>Acceso a servicios básicos:</strong> Como salud, vivienda y justicia para todos los ciudadanos.</li>
+                        <li><strong>Fomentar la equidad en el empleo:</strong> Combatir la discriminación laboral y promover salarios justos.</li>
+                        <li><strong>Integración de grupos marginalizados:</strong> Desarrollar políticas específicas para incluir a aquellos que han sido históricamente excluidos.</li>
+                        <li><strong>Participación comunitaria:</strong> Incentivar la implicación de los ciudadanos en la toma de decisiones y en la vida de su comunidad.</li>
+                        <li><strong>Fortalecimiento de los lazos de la comunidad:</strong> Promover actividades y espacios que fomenten el encuentro, la confianza y la colaboración entre vecinos y grupos diversos.</li>
+                    </ul>`
+                ],
+                questions: [
+    // Las 12 preguntas que ya teníamos (revisadas y con comas correctas)
+    { text: "¿Cómo se define una sociedad según el texto?", options: ["Un grupo de individuos con intereses puramente económicos.", "Un grupo de individuos que comparten territorio, leyes y cultura.", "Cualquier conjunto de personas que viven cerca.", "Una organización política sin elementos culturales comunes."], correctAnswer: 1 },
+    { text: "¿Cuál de los siguientes NO es un componente clave de la sociedad mencionado?", options: ["Cultura", "Roles sociales", "Preferencias individuales de ocio", "Instituciones sociales"], correctAnswer: 2 },
+    { text: "Garantizar que todos los miembros de la sociedad tengan acceso a oportunidades y derechos iguales se refiere a la:", options: ["Estratificación social", "Cohesión social", "Inclusión social", "Asimilación cultural"], correctAnswer: 2 },
+    { text: "La fuerza de las relaciones y la solidaridad entre los miembros de una sociedad define la:", options: ["Anomia social", "Cohesión social", "Competición individual", "Exclusión social"], correctAnswer: 1 },
+    { text: "Los patrones de comportamiento esperados de una persona según su posición en la sociedad se llaman:", options: ["Valores culturales", "Leyes formales", "Roles sociales", "Símbolos nacionales"], correctAnswer: 2 },
+    { text: "La familia, el sistema educativo y el gobierno son ejemplos de:", options: ["Grupos informales de amigos", "Instituciones sociales", "Estratificación económica", "Normas culturales no escritas"], correctAnswer: 1 },
+    { text: "¿Cuál es una estrategia mencionada para fomentar la inclusión y la cohesión social?", options: ["Aumentar la estratificación social.", "Limitar el acceso a servicios básicos.", "Promover la educación inclusiva y accesible.", "Debilitar los lazos comunitarios."], correctAnswer: 2 },
+    { text: "La jerarquización de individuos y grupos en diferentes estratos basada en riqueza o poder se conoce como:", options: ["Cohesión social", "Estratificación social", "Inclusión cultural", "Rol social igualitario"], correctAnswer: 1 },
+    { text: "Compartir un conjunto significativo de normas, valores y una cultura general es una característica de:", options: ["Un grupo de turistas", "Una sociedad", "Una colección de individuos sin relación", "Una especie animal"], correctAnswer: 1 },
+    { text: "Combatir la marginación y la discriminación es un objetivo principal de la:", options: ["Estratificación social", "Inclusión social", "Cohesión forzada", "Asimilación cultural obligatoria"], correctAnswer: 1 },
+    { text: "El 'modo de vida' de un grupo, incluyendo conocimientos, creencias y costumbres, es su:", options: ["Estructura política", "Sistema legal", "Cultura", "Estratificación económica"], correctAnswer: 2 },
+    { text: "Incentivar la implicación de los ciudadanos en la toma de decisiones y en la vida comunitaria es una estrategia para:", options: ["Aumentar la apatía política.", "Fomentar la participación comunitaria y la cohesión.", "Reducir la diversidad de opiniones.", "Fortalecer el individualismo extremo."], correctAnswer: 1 },
+    // Comienzan las 18 preguntas adicionales
+    { text: "Una sociedad se define como un grupo de individuos que comparten, entre otras cosas:", options: ["Únicamente intereses económicos.", "Un espacio o territorio común y leyes políticas.", "Solo la misma edad y género.", "Una total ausencia de normas y valores."], correctAnswer: 1 },
+    { text: "El 'modo de vida' de un grupo, incluyendo conocimientos y costumbres, se refiere al componente de la sociedad llamado:", options: ["Estratificación social", "Cultura", "Roles sociales", "Leyes formales"], correctAnswer: 1 },
+    { text: "Los patrones de comportamiento esperados de una persona que ocupa una determinada posición social son:", options: ["Instituciones sociales", "Valores culturales", "Roles sociales", "Leyes políticas"], correctAnswer: 2 },
+    { text: "La jerarquización de individuos y grupos en diferentes estratos o niveles es la definición de:", options: ["Cohesión social", "Inclusión social", "Estratificación social", "Cultura compartida"], correctAnswer: 2 },
+    { text: "La familia y el sistema educativo son ejemplos de:", options: ["Normas informales", "Instituciones sociales", "Roles de género", "Estratificación económica"], correctAnswer: 1 },
+    { text: "Garantizar que todos los miembros de la sociedad tengan acceso equitativo a oportunidades y recursos es el objetivo de la:", options: ["Estratificación social", "Exclusión social", "Inclusión social", "Cohesión forzada"], correctAnswer: 2 },
+    { text: "La fuerza de las relaciones y la solidaridad entre los miembros de una sociedad se denomina:", options: ["Anomia", "Conflicto social", "Cohesión social", "Individualismo"], correctAnswer: 2 },
+    { text: "Promover la educación inclusiva y accesible es una estrategia para fomentar:", options: ["La estratificación social.", "La exclusión de grupos minoritarios.", "La inclusión y la cohesión social.", "La competencia desleal."], correctAnswer: 2 },
+    { text: "El acceso a servicios básicos como salud y vivienda para todos es una medida de:", options: ["Aumento de la desigualdad.", "Inclusión social.", "Fragmentación comunitaria.", "Debilitamiento de la sociedad."], correctAnswer: 1 },
+    { text: "Combatir la discriminación laboral y promover salarios justos contribuye a:", options: ["La equidad en el empleo y la inclusión.", "El aumento de la brecha salarial.", "La desintegración social.", "La marginación de ciertos grupos."], correctAnswer: 0 },
+    { text: "Desarrollar políticas específicas para incluir a grupos históricamente excluidos es una forma de:", options: ["Aumentar la marginación.", "Integración de grupos marginalizados.", "Fomentar la discriminación.", "Ignorar las desigualdades existentes."], correctAnswer: 1 },
+    { text: "Incentivar la implicación de los ciudadanos en la vida de su comunidad fortalece:", options: ["El aislamiento individual.", "La participación comunitaria y la cohesión.", "La apatía cívica.", "La desconfianza entre vecinos."], correctAnswer: 1 },
+    { text: "Las 'leyes' como componente de la sociedad son:", options: ["Sugerencias de comportamiento sin sanción.", "Normas formalmente establecidas y sancionadas por el Estado.", "Tradiciones orales únicamente.", "Acuerdos privados entre individuos."], correctAnswer: 1 },
+    { text: "La 'cultura' es un componente de la sociedad que NO incluye necesariamente:", options: ["Conocimientos y creencias.", "Leyes y costumbres.", "Instintos biológicos universales.", "Arte y moral."], correctAnswer: 2 },
+    { text: "Una sociedad cohesionada se caracteriza por un alto grado de:", options: ["Conflicto y desconfianza.", "Confianza, cooperación y sentido de pertenencia.", "Individualismo extremo y competencia.", "Aislamiento entre sus miembros."], correctAnswer: 1 },
+    { text: "Las 'normas y valores' compartidos en una sociedad sirven para:", options: ["Generar caos y desorden.", "Proporcionar un marco de referencia para la interacción y la identidad colectiva.", "Fomentar la anarquía.", "Promover la desigualdad intencionalmente."], correctAnswer: 1 },
+    { text: "El concepto de 'sociedad' implica que los individuos están:", options: ["Completamente aislados unos de otros.", "Interrelacionados y dependen unos de otros.", "Libres de cualquier norma o ley.", "En constante conflicto sin posibilidad de organización."], correctAnswer: 1 },
+    { text: "Fortalecer los lazos de la comunidad es una estrategia para mejorar:", options: ["La exclusión social.", "La cohesión social.", "La estratificación rígida.", "La competencia individualista."], correctAnswer: 1 }
+]
+            },
+             "adolescente_relaciones": {
+                title: "6. El Adolescente y sus Relaciones 💬",
+                summaryTitle: "Relaciones en la Adolescencia",
+                content: [
+                    `<h3>Transformaciones en el Mundo Relacional del Adolescente 🔄</h3>
+                    <p>La etapa de la <strong>adolescencia</strong> es un período de profundos cambios, y esto se refleja de manera muy significativa en el ámbito de las relaciones sociales de los jóvenes. Algunas de las transformaciones más importantes incluyen:</p>
+                    <ul>
+                        <li><strong>Cambios en las Relaciones Familiares:</strong> Suele haber una búsqueda de mayor autonomía e independencia respecto a los padres. Pueden surgir más conflictos por normas o límites, pero la familia sigue siendo una base de apoyo fundamental, aunque la relación se redefine.</li>
+                        <li><strong>Importancia Creciente de Amigos y Compañeros (Grupo de Pares):</strong> El grupo de amigos se convierte en un referente crucial. Ofrece un espacio para compartir experiencias, construir identidad, sentirse comprendido y aceptado. La lealtad y la intimidad con los amigos ganan mucho peso.</li>
+                        <li><strong>Inicio de Relaciones Románticas y Exploración de la Sexualidad:</strong> Es común que en la adolescencia surjan los primeros intereses románticos y las primeras relaciones de pareja. También es una etapa de descubrimiento y definición de la propia sexualidad.</li>
+                        <li><strong>Influencia de las Redes Sociales y la Tecnología en las Relaciones:</strong> Las plataformas digitales se convierten en un espacio fundamental para la interacción, la comunicación y la construcción de relaciones, tanto con amigos como con intereses románticos. Esto trae consigo oportunidades y también nuevos desafíos.</li>
+                    </ul>`,
+                    `<h3>Asunción Progresiva de Responsabilidades 🌱</h3>
+                    <p>A medida que los adolescentes crecen y maduran, comienzan a <strong>asumir responsabilidades más adultas</strong>. Este proceso es clave para su desarrollo personal y para una transición saludable hacia la vida adulta.</p>
+                    <p>Algunas de las responsabilidades que los adolescentes empiezan a sentir y afrontar son:</p>
+                    <ul>
+                        <li><strong>Responsabilidades Personales:</strong> Cuidado de sí mismos (higiene, salud), gestión de su tiempo, organización de sus estudios, cumplimiento de compromisos.</li>
+                        <li><strong>Preparación para el Futuro:</strong> Tomar decisiones sobre su educación o formación, pensar en futuras metas profesionales, desarrollar habilidades relevantes.</li>
+                        <li><strong>Responsabilidades en Casa:</strong> Colaborar en tareas domésticas, cuidar de hermanos menores si los hay, contribuir al bienestar familiar.</li>
+                        <li><strong>Tomar la Responsabilidad de sus Decisiones y Consecuencias:</strong> Aprender que sus acciones tienen efectos y ser capaces de responder por ellas, tanto las positivas como las negativas.</li>
+                    </ul>
+                    <div class="concept-box">
+                        <strong>Desarrollo Clave:</strong> La asunción de responsabilidades fomenta la autonomía, la madurez y la capacidad de autogestión, habilidades esenciales para la vida adulta.
+                    </div>`,
+                    `<h3>Conductas Sociales: Prosociales vs. Antisociales 😇😈</h3>
+                    <h4>Conductas Prosociales</h4>
+                    <p>Son aquellas <strong>acciones voluntarias que benefician a otras personas</strong> o al conjunto de la sociedad. No se realizan esperando una recompensa externa directa.</p>
+                    <p>Ejemplos: Ayudar a un compañero, compartir, cooperar en un proyecto grupal, consolar a alguien que está triste, participar en actividades de voluntariado.</p>
+                    <p>Estas conductas son fundamentales para la cohesión social y el bienestar colectivo.</p>
+                    <h4>Conductas Antisociales</h4>
+                    <p>Son aquellas <strong>acciones que perjudican a otros</strong>, que violan los derechos de los demás o que van en contra de las normas y valores fundamentales de la sociedad.</p>
+                    <p>Ejemplos: Agredir física o verbalmente, mentir para perjudicar, robar, vandalizar, hacer bullying, incumplir normas de convivencia de forma reiterada.</p>
+                    <p>Estas conductas generan daño y erosionan la confianza y el orden social.</p>`,
+                    `<h3>El Impacto de Normas, Roles y Estereotipos en el Comportamiento Adolescente ⚖️🎭🧐</h3>
+                    <p>El comportamiento de los adolescentes está fuertemente influenciado por el contexto social en el que se desarrollan. Tres elementos clave son:</p>
+                    <h4>A. Normas Sociales</h4>
+                    <p>Son <strong>reglas no escritas (y a veces escritas) que guían el comportamiento</strong> aceptado y esperado dentro de un grupo o sociedad.</p>
+                    <p><strong>Impacto:</strong> Las normas sociales pueden influir en una amplia gama de aspectos de la vida adolescente, desde la forma de vestir, la música que escuchan, los intereses que desarrollan, hasta sus comportamientos en diferentes situaciones sociales (ej. cómo comportarse en clase, en una fiesta, etc.). La presión por conformarse a estas normas puede ser muy fuerte.</p>
+                    <h4>B. Roles de Género</h4>
+                    <p>Son las <strong>expectativas sociales sobre cómo deben pensar, sentir y comportarse los individuos</strong> según se les identifique como hombres o mujeres (o según otras identidades de género). Estos roles suelen ser aprendidos desde la infancia.</p>
+                    <p><strong>Impacto:</strong> La conformidad estricta con roles de género tradicionales puede limitar la expresión personal, las elecciones académicas o profesionales y el desarrollo integral de los adolescentes. Desafiar estos roles puede llevar a incomprensión, rechazo social o conflicto.</p>
+                    <h4>C. Estereotipos</h4>
+                    <p>Son <strong>creencias simplificadas, generalizadas y a menudo incorrectas o exageradas</strong> sobre las características de un determinado grupo de personas (basadas en su nacionalidad, etnia, género, edad, etc.).</p>
+                    <p><strong>Impacto:</strong> Los estereotipos pueden influir en cómo los adolescentes perciben y se comportan con los demás, llevando a prejuicios y juicios rápidos. Pueden contribuir a la discriminación, la exclusión y a limitar las oportunidades de aquellos que son estereotipados. Es importante que los adolescentes desarrollen una conciencia crítica sobre los estereotipos para no perpetuarlos.</p>`
+                ],
+                questions: [
+    // Las 12 preguntas que ya teníamos (revisadas y con comas correctas)
+    { text: "¿Cuál es un cambio importante en las relaciones familiares durante la adolescencia?", options: ["Una dependencia total de los padres.", "Una búsqueda de mayor autonomía e independencia.", "La desaparición de cualquier conflicto.", "La ruptura total de los lazos familiares."], correctAnswer: 1 },
+    { text: "Durante la adolescencia, el grupo de amigos se convierte en:", options: ["Una influencia menor comparada con la infancia.", "Un referente crucial para compartir y construir identidad.", "Un grupo con el que solo se comparten actividades superficiales.", "Una fuente constante de problemas sin beneficios."], correctAnswer: 1 },
+    { text: "La asunción progresiva de responsabilidades en la adolescencia es clave para:", options: ["Mantener la dependencia de los padres.", "Evitar cualquier tipo de madurez.", "Su desarrollo personal y transición a la vida adulta.", "Reducir su capacidad de tomar decisiones."], correctAnswer: 2 },
+    { text: "Ayudar a un compañero o participar en voluntariado son ejemplos de:", options: ["Conductas antisociales.", "Conductas prosociales.", "Responsabilidades exclusivamente adultas.", "Normas sociales negativas."], correctAnswer: 1 },
+    { text: "Las reglas no escritas que guían el comportamiento en la sociedad se conocen como:", options: ["Leyes formales únicamente.", "Estereotipos de género.", "Normas sociales.", "Conductas antisociales."], correctAnswer: 2 },
+    { text: "Las expectativas sociales sobre cómo deben comportarse los individuos según su género se denominan:", options: ["Normas de convivencia.", "Roles de género.", "Estereotipos culturales.", "Responsabilidades personales."], correctAnswer: 1 },
+    { text: "Las creencias simplificadas y a menudo incorrectas sobre un grupo de personas son:", options: ["Verdades universales.", "Normas sociales positivas.", "Estereotipos.", "Conductas prosociales."], correctAnswer: 2 },
+    { text: "La conformidad estricta con roles de género tradicionales puede, según el texto:", options: ["Potenciar siempre la expresión personal.", "Limitar la expresión personal y el desarrollo.", "No tener ningún impacto en los adolescentes.", "Facilitar siempre la comprensión social."], correctAnswer: 1 },
+    { text: "Colaborar en tareas domésticas es un ejemplo de:", options: ["Conducta antisocial.", "Preparación para el futuro académico.", "Responsabilidad en casa.", "Rol de género exclusivo."], correctAnswer: 2 },
+    { text: "Agredir o hacer bullying son ejemplos de:", options: ["Conductas prosociales.", "Normas sociales aceptadas.", "Conductas antisociales.", "Formas de liderazgo positivo."], correctAnswer: 2 },
+    { text: "Las redes sociales y la tecnología en la adolescencia influyen en:", options: ["Únicamente las relaciones familiares.", "Las relaciones con amigos, parejas y la comunicación en general.", "Solo de forma negativa en todas las relaciones.", "Exclusivamente en el rendimiento académico."], correctAnswer: 1 },
+    { text: "Tomar responsabilidad por las propias decisiones y sus consecuencias es parte de:", options: ["La evitación de la madurez.", "La asunción progresiva de responsabilidades.", "Las conductas antisociales.", "La influencia negativa de los amigos."], correctAnswer: 1 },
+    // Comienzan las 18 preguntas adicionales
+    { text: "Durante la adolescencia, las relaciones con amigos y compañeros tienden a:", options: ["Perder toda importancia.", "Ganar una importancia crucial como referentes.", "Ser supervisadas constantemente por los padres.", "Limitarse exclusivamente al entorno escolar."], correctAnswer: 1 },
+    { text: "La exploración de la sexualidad y el inicio de relaciones románticas son aspectos que suelen surgir durante:", options: ["La infancia temprana.", "La adolescencia.", "La vida adulta tardía.", "La niñez media."], correctAnswer: 1 },
+    { text: "El proceso de asumir responsabilidades más adultas en la adolescencia NO incluye necesariamente:", options: ["El cuidado personal.", "La preparación para el futuro.", "La evasión de cualquier tarea doméstica.", "Tomar responsabilidad por las propias decisiones."], correctAnswer: 2 },
+    { text: "Compartir, cooperar o consolar a alguien son ejemplos de:", options: ["Conductas antisociales.", "Conductas prosociales.", "Normas sociales negativas.", "Estereotipos de género."], correctAnswer: 1 },
+    { text: "Las acciones que perjudican a otros o van contra las normas sociales se definen como:", options: ["Conductas prosociales.", "Conductas de liderazgo.", "Conductas antisociales.", "Normas de convivencia positivas."], correctAnswer: 2 },
+    { text: "Las 'normas sociales' influyen en los adolescentes en aspectos como:", options: ["Únicamente sus creencias religiosas.", "La forma de vestir, la música que escuchan y sus comportamientos sociales.", "Solo en su rendimiento académico.", "Exclusivamente en sus relaciones familiares."], correctAnswer: 1 },
+    { text: "La conformidad estricta con 'roles de género' tradicionales puede, en la adolescencia:", options: ["Fomentar siempre la máxima expresión personal.", "Limitar la expresión personal y las elecciones académicas o profesionales.", "No tener ningún efecto observable.", "Garantizar el éxito en todas las áreas de la vida."], correctAnswer: 1 },
+    { text: "Creencias simplificadas y generalizadas sobre un grupo de personas, que pueden llevar a prejuicios, son:", options: ["Roles de género.", "Normas sociales explícitas.", "Estereotipos.", "Conductas prosociales detalladas."], correctAnswer: 2 },
+    { text: "La influencia de las redes sociales y la tecnología en las relaciones adolescentes es un cambio:", options: ["Inexistente en la actualidad.", "Relevante que presenta oportunidades y desafíos.", "Exclusivamente positivo y sin riesgos.", "Que solo afecta a las relaciones familiares."], correctAnswer: 1 },
+    { text: "La búsqueda de mayor autonomía e independencia respecto a los padres es característica de:", options: ["Las relaciones familiares en la infancia.", "Los cambios en las relaciones familiares durante la adolescencia.", "Las relaciones de pareja adultas.", "La interacción con el grupo de pares únicamente."], correctAnswer: 1 },
+    { text: "Gestionar el propio tiempo y organizar los estudios son ejemplos de:", options: ["Responsabilidades exclusivamente parentales.", "Responsabilidades personales que asumen los adolescentes.", "Conductas antisociales.", "Influencia negativa de las redes sociales."], correctAnswer: 1 },
+    { text: "Las 'conductas prosociales' son fundamentales para:", options: ["El aislamiento individual.", "La cohesión social y el bienestar colectivo.", "El fomento de la competencia destructiva.", "La perpetuación de estereotipos negativos."], correctAnswer: 1 },
+    { text: "Hacer bullying o vandalizar son ejemplos claros de:", options: ["Normas sociales aceptadas en la adolescencia.", "Conductas antisociales.", "Formas de expresión personal válidas.", "Responsabilidades de grupo."], correctAnswer: 1 },
+    { text: "Desafiar los roles de género tradicionales durante la adolescencia puede llevar a:", options: ["Aceptación social inmediata y universal.", "Incomprensión o rechazo social en algunos contextos.", "Una total falta de identidad.", "La eliminación automática de todos los estereotipos."], correctAnswer: 1 },
+    { text: "Que los adolescentes desarrollen una conciencia crítica sobre los estereotipos es importante para:", options: ["Reforzarlos y aceptarlos sin cuestionar.", "No perpetuarlos y evitar la discriminación.", "Usarlos para simplificar las relaciones sociales.", "Ignorar las diferencias entre las personas."], correctAnswer: 1 },
+    { text: "La lealtad y la intimidad con los amigos ganan peso durante la:", options: ["Primera infancia (0-5 años).", "Adolescencia.", "Edad adulta madura (40-60 años).", "Tercera edad."], correctAnswer: 1 },
+    { text: "Tomar decisiones sobre la educación o formación futura es parte de la responsabilidad de:", options: ["Los padres exclusivamente.", "Los adolescentes en su preparación para el futuro.", "Los profesores únicamente.", "El Estado sin intervención del joven."], correctAnswer: 1 },
+    { text: "El texto sugiere que las normas sociales son:", options: ["Siempre leyes escritas y formales.", "Principalmente reglas no escritas que guían el comportamiento.", "Expectativas que solo se aplican a los adultos.", "Creencias individuales sin impacto grupal."], correctAnswer: 1 }
+]
+            },
+            "igualdad_genero": { // Este tema ya estaba bastante completo, se mantiene y ajusta
+                title: "7. Igualdad de Género ⚖️",
+                summaryTitle: "Buscando la Igualdad de Género",
+                content: [
+                    `<h3>Definición e Importancia 🎯</h3>
+                    <p>La <strong>IGUALDAD DE GÉNERO</strong> se refiere al principio fundamental de que mujeres y hombres deben tener los <strong>mismos derechos, responsabilidades y oportunidades</strong> en todas las facetas de la vida. No significa que mujeres y hombres sean idénticos, sino que sus derechos, responsabilidades y oportunidades no dependerán del sexo con el que nacieron.</p>
+                    <p>Es una meta crucial para lograr una sociedad verdaderamente <strong>justa y equitativa</strong>, y abarca aspectos como la igualdad en el trabajo, la educación, la salud, la participación política, y en el hogar, entre otros.</p>
+                    <h4>¿Por qué es importante conseguirla? 🤔</h4>
+                    <ul>
+                        <li>En primer lugar, porque es un <strong>derecho humano fundamental</strong>. Todos los individuos, independientemente de su género, deben tener la misma capacidad para tomar decisiones sobre sus vidas y las mismas oportunidades para poder cumplir sus sueños y proyectos.</li>
+                        <li>En segundo lugar, las sociedades que promueven activamente la igualdad de género suelen ser <strong>más desarrolladas, prósperas y estables</strong>. La participación equitativa de mujeres y hombres en todos los aspectos de la vida conduce a un mayor desarrollo social y económico para el conjunto de la sociedad.</li>
+                    </ul>`,
+                    `<h3>Problemas en la Consecución de la Igualdad 🚧</h3>
+                    <p>A pesar de los avances logrados en muchas partes del mundo, la igualdad de género plena aún enfrenta numerosos obstáculos y problemas persistentes:</p>
+                    <h4>1. Brecha Salarial 💰</h4>
+                    <p>Las mujeres, a menudo, <strong>ganan menos que los hombres por realizar el mismo trabajo</strong> o un trabajo de igual valor. Esto es un claro indicador de desigualdad de género en el ámbito laboral.</p>
+                    <p>La <strong>BRECHA SALARIAL DE GÉNERO</strong> se define como la diferencia existente entre los salarios medios recibidos por los hombres y por las mujeres, calculada sobre la base de la diferencia media en los ingresos brutos por hora.</p>
+                    <div class="concept-box">
+                        <p><strong>Datos sobre la Brecha Salarial:</strong></p>
+                        <table class="styled-table">
+                            <thead><tr><th>REGIÓN</th><th>DIFERENCIA EN RETRIBUCIÓN POR HORA (Mujeres ganan X% menos)</th><th>DIFERENCIA EN RETRIBUCIÓN ANUAL (Mujeres ganan X% menos)</th></tr></thead>
+                            <tbody>
+                                <tr><td>MUNDO 🌍</td><td>~23%</td><td>~16%</td></tr>
+                                <tr><td>EUROPA 🇪🇺</td><td>~15,7%</td><td>~14,1%</td></tr>
+                                <tr><td>ESPAÑA 🇪🇸</td><td>~19,5%</td><td>~11,9%</td></tr>
+                            </tbody>
+                        </table>
+                        <small><em>Tabla basada en datos de fuentes como OIT, Eurostat e INE.</em></small>
+                    </div>`,
+                    `<h4>2. Menor Representación en Puestos de Poder (Techo de Cristal) ⬆️🚫</h4>
+                    <p>Las mujeres suelen estar subrepresentadas en posiciones de liderazgo y toma de decisiones, tanto en el sector público como en el privado.</p>
+                    <p>El <strong>TECHO DE CRISTAL</strong> es un término que describe las barreras invisibles pero persistentes con las que se encuentran las mujeres (y otros grupos minoritarios) para ascender en sus carreras profesionales y llegar a los puestos de más alta responsabilidad y remuneración.</p>
+                    <p>Un ejemplo: En 2024, las mujeres suponían solo el <strong>34%</strong> de los miembros de las juntas directivas de las mayores empresas de España, mientras que los hombres representaban el 66%.</p>
+                    <h4>3. Violencia de Género 🚫</h4>
+                    <p>La violencia de género, que incluye el acoso sexual, el abuso físico y psicológico, la trata de personas, y otras formas de violencia dirigidas contra una persona por razón de su género, sigue siendo un problema grave y generalizado en todo el mundo. Esta violencia no solo causa un sufrimiento inmenso, sino que también impide que las mujeres y las niñas alcancen su pleno potencial y participen de manera igualitaria en la sociedad.</p>`,
+                    `<h4>4. Otros Problemas Clave 🗝️</h4>
+                    <ul>
+                        <li><strong>Desigualdad ante la Ley:</strong> Aunque en muchos países se ha avanzado, todavía existen lugares donde las leyes y políticas discriminan activamente a las mujeres en áreas como la herencia, la propiedad, el matrimonio o el divorcio.</li>
+                        <li><strong>Estereotipos Sexistas y Roles de Género Tradicionales:</strong> Son las expectativas sociales, a menudo rígidas y limitantes, sobre cómo deben comportarse y qué roles deben desempeñar mujeres y hombres. Estos estereotipos suponen barreras significativas. Un ejemplo de cómo los roles de género afectan las decisiones se ve en quién reduce su jornada laboral tras tener un hijo:
+                            <div class="bar-chart-container">
+                                <div class="bar-chart-title">Decisión de Reducción de Jornada Laboral Tras Tener un Hijo/a</div>
+                                <div class="bar-item">
+                                    <div class="bar-label">Mujeres:</div>
+                                    <div class="bar-wrapper"><div class="bar" style="width: 95%;">95%</div></div>
+                                </div>
+                                <div class="bar-item">
+                                    <div class="bar-label">Hombres:</div>
+                                    <div class="bar-wrapper"><div class="bar" style="width: 5%; background-color: var(--secondary-color);">5%</div></div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>`,
+                    `<h3>Visibilidad de los Estereotipos Sexistas 🎭</h3>
+                    <p>Los estereotipos sexistas son creencias generalizadas y simplificadas sobre los atributos o características que poseen o deberían poseer hombres y mujeres. A menudo son perjudiciales porque limitan las expectativas y oportunidades.</p>
+                    <h4>Algunos Ejemplos de Estereotipos Femeninos Comunes:</h4>
+                    <ul>
+                        <li><strong>Emotividad y Sensibilidad Excesivas:</strong> Se asume que las mujeres son "naturalmente" más emocionales, sensibles y menos racionales.</li>
+                        <li><strong>Orientación Principal al Cuidado del Hogar y los Hijos:</strong> Tradicionalmente, se espera que las mujeres sean las principales responsables de las tareas domésticas y el cuidado de los niños.</li>
+                        <li><strong>Interés Predominante en la Moda, la Belleza y la Apariencia.</strong></li>
+                        <li><strong>Pasividad y Sumisión.</strong></li>
+                    </ul>`,
+                    `<h4>Algunos Ejemplos de Estereotipos Masculinos Comunes:</h4>
+                    <ul>
+                        <li><strong>Fuerza, Agresividad y Valentía.</strong></li>
+                        <li><strong>Escasa Expresión Emocional ("Los hombres no lloran").</strong></li>
+                        <li><strong>Independencia, Racionalidad y Rol de Proveedor Principal.</strong></li>
+                        <li><strong>Hipersexualización o Valoración de la Actividad Sexual como Logro</strong> (mientras que en las chicas puede ser juzgada negativamente).</li>
+                    </ul>
+                    <div class="concept-box">
+                        <strong>Importante:</strong> Estos estereotipos son construcciones sociales, no determinaciones biológicas, y afectan tanto a mujeres como a hombres, limitando su pleno desarrollo.
+                    </div>`,
+                    `<h3>Hacia Modelos y Relaciones de Género Igualitarios 🤝</h3>
+                    <p>Construir una sociedad con igualdad de género real requiere fomentar activamente <strong>MODELOS Y RELACIONES DE GÉNERO IGUALITARIOS</strong>. Este es un enfoque que busca que todas las relaciones humanas se basen en la <strong>igualdad de derechos, oportunidades y responsabilidades</strong> para todos, independientemente del género.</p>
+                    <p>Estos modelos buscan desmontar los estereotipos de género tradicionales.</p>
+                    <h4>Condiciones Fundamentales para Relaciones Igualitarias:</h4>
+                    <ul>
+                        <li><strong>Igualdad de Derechos y Oportunidades:</strong> Acceso equitativo a recursos, empleo, educación, salud, política.</li>
+                        <li><strong>Reparto Equitativo de Responsabilidades:</strong> Tareas del hogar, cuidado de hijos, etc. (corresponsabilidad).</li>
+                        <li><strong>Reconocimiento y Respeto Mutuo.</strong></li>
+                        <li><strong>Comunicación y Relaciones Respetuosas:</strong> Abierta, honesta, asertiva, libre de violencia.</li>
+                        <li><strong>Eliminación de Estereotipos de Género:</strong> Libertad individual de elección.</li>
+                    </ul>`,
+                    `<h3>Construyendo la Igualdad en Diferentes Ámbitos 🏡💼🎓🌍🏛️</h3>
+                    <p>Para alcanzar estos modelos igualitarios, es necesario abordar la igualdad en múltiples esferas:</p>
+                    <ul>
+                        <li><strong>Familiar:</strong> Decisiones conjuntas, tareas compartidas, educación en igualdad.</li>
+                        <li><strong>Relaciones Románticas:</strong> Respeto mutuo, confianza, comunicación, consentimiento, sin doble rasero.</li>
+                        <li><strong>Laboral:</strong> Igualdad en contratación, promoción, remuneración; prevención de acoso; conciliación.</li>
+                        <li><strong>Educativo:</strong> Evitar estereotipos en materiales; enseñar igualdad y respeto; fomentar elección vocacional libre de sesgos.</li>
+                        <li><strong>Social (Medios de Comunicación):</strong> Representación equitativa y no estereotipada; desafiar roles tradicionales.</li>
+                        <li><strong>Política y Leyes:</strong> Leyes que garanticen igualdad y protejan contra discriminación; promover conciliación y participación paritaria.</li>
+                    </ul>
+                    <div class="concept-box">
+                        <strong>Conclusión:</strong> La igualdad de género es una condición necesaria para el progreso y el bienestar de toda la sociedad. Requiere el compromiso y la acción de todos.
+                    </div>`
+                ],
+                questions: [
+    // Las 12 preguntas que ya teníamos (revisadas y con comas correctas)
+    { text: "¿Qué implica el principio de igualdad de género?", options: ["Que hombres y mujeres deben ser idénticos en todo.", "Mismos derechos, responsabilidades y oportunidades para hombres y mujeres.", "Que las mujeres deben tener más derechos para compensar la historia.", "Que los roles tradicionales de género deben reforzarse."], correctAnswer: 1 },
+    { text: "Una razón por la que la igualdad de género es importante es porque:", options: ["Simplifica las relaciones sociales.", "Es un derecho humano fundamental.", "Reduce la competencia en el mercado laboral.", "Mantiene las estructuras sociales tradicionales."], correctAnswer: 1 },
+    { text: "La diferencia entre los salarios medios de hombres y mujeres por trabajo de igual valor se conoce como:", options: ["Techo de cristal.", "Brecha salarial de género.", "Discriminación positiva.", "Estereotipo laboral."], correctAnswer: 1 },
+    { text: "El término 'Techo de Cristal' se refiere a:", options: ["La transparencia en las promociones laborales.", "Las barreras invisibles que dificultan el ascenso profesional de las mujeres.", "La igualdad de oportunidades en la alta dirección.", "Un tipo de arquitectura moderna en edificios corporativos."], correctAnswer: 1 },
+    { text: "Según el texto, ¿qué porcentaje de los miembros de juntas directivas de las mayores empresas de España eran mujeres en 2024?", options: ["Menos del 10%", "Alrededor del 50%", "Solo el 34%", "Más del 60%"], correctAnswer: 2 },
+    { text: "La violencia de género, según el texto, incluye:", options: ["Únicamente el abuso físico.", "El acoso sexual, el abuso y la discriminación.", "Solo los conflictos de pareja leves.", "Críticas constructivas en el trabajo."], correctAnswer: 1 },
+    { text: "Creer que las mujeres son naturalmente más emocionales y menos racionales es un ejemplo de:", options: ["Una verdad biológica incuestionable.", "Un estereotipo femenino común.", "Una característica positiva para el liderazgo.", "Un modelo de relación igualitario."], correctAnswer: 1 },
+    { text: "La expectativa de que los hombres no deben expresar emociones como el llanto es un:", options: ["Signo de fortaleza real.", "Estereotipo masculino.", "Comportamiento saludable.", "Requisito para la igualdad."], correctAnswer: 1 },
+    { text: "Un modelo de relación de género igualitario busca:", options: ["Invertir los roles de género tradicionales.", "Que las relaciones se basen en igualdad de derechos, oportunidades y responsabilidades, superando estereotipos.", "Eliminar todas las diferencias entre hombres y mujeres.", "Reforzar la idea del hombre como proveedor principal."], correctAnswer: 1 },
+    { text: "El reparto equitativo de responsabilidades en el hogar y la crianza es una condición para:", options: ["Mantener los roles de género tradicionales.", "Generar más conflictos familiares.", "Fomentar modelos y relaciones de género igualitarios.", "Que las mujeres se dediquen exclusivamente al trabajo fuera de casa."], correctAnswer: 2 },
+    { text: "Para lograr la igualdad de género en el ámbito educativo, se debe:", options: ["Separar a niños y niñas en diferentes clases.", "Evitar los estereotipos de género en materiales y actividades, y enseñar igualdad.", "Enfocar la educación de las niñas solo en humanidades.", "Promover carreras 'masculinas' para los chicos y 'femeninas' para las chicas."], correctAnswer: 1 },
+    { text: "¿Cuál es el papel de los medios de comunicación en la promoción de la igualdad de género?", options: ["Reforzar los estereotipos tradicionales porque son populares.", "Mostrar una representación equitativa y no estereotipada de hombres y mujeres.", "Centrarse solo en historias de éxito de un género.", "Evitar tratar temas de género para no generar controversia."], correctAnswer: 1 },
+    // Comienzan las 18 preguntas adicionales
+    { text: "La igualdad de género abarca la igualdad en aspectos como:", options: ["Solo el trabajo y la educación.", "El trabajo, la educación, la salud y la representación política, entre otros.", "Únicamente la representación política.", "Solo los derechos en el matrimonio."], correctAnswer: 1 },
+    { text: "Según el texto, las sociedades que promueven la igualdad de género suelen ser:", options: ["Menos desarrolladas y más inestables.", "Más desarrolladas y estables.", "Igual de desarrolladas que las que no la promueven.", "Exclusivamente sociedades agrarias."], correctAnswer: 1 },
+    { text: "La participación equitativa de mujeres y hombres en todos los aspectos de la vida conduce a:", options: ["Un menor desarrollo social y económico.", "Un mayor desarrollo social y económico.", "Un estancamiento económico.", "Un desarrollo económico sin impacto social."], correctAnswer: 1 },
+    { text: "La brecha salarial de género, según la definición, se calcula sobre la base de la diferencia media en:", options: ["Los ingresos brutos anuales únicamente.", "Los ingresos netos por hora.", "Los ingresos brutos por hora.", "El número de horas trabajadas."], correctAnswer: 2 },
+    { text: "Las barreras invisibles que dificultan el ascenso profesional de las mujeres se conocen como:", options: ["Discriminación directa.", "Brecha de oportunidades.", "Techo de cristal.", "Acoso laboral."], correctAnswer: 2 },
+    { text: "Un ejemplo de la menor representación de mujeres en puestos de poder es que en 2024, en España, solo el 34% de los miembros de juntas directivas de grandes empresas eran mujeres, lo que implica que el 66% eran:", options: ["Otros géneros.", "Hombres.", "Personas sin experiencia.", "Extranjeros."], correctAnswer: 1 },
+    { text: "La violencia de género impide que las mujeres y las niñas:", options: ["Trabajen en el hogar.", "Alcancen su pleno potencial y participen igualitariamente en la sociedad.", "Tengan acceso a la moda.", "Desarrollen emociones."], correctAnswer: 1 },
+    { text: "El hecho de que en algunos países las leyes discriminen a las mujeres es un problema para la consecución de la igualdad, aunque en España, según el texto, esto:", options: ["Es el principal problema.", "No es el caso generalizado.", "Está aumentando.", "Nunca ha ocurrido."], correctAnswer: 1 },
+    { text: "La expectativa de que las mujeres sean las principales responsables del cuidado del hogar es un ejemplo de:", options: ["Una ley universal.", "Un estereotipo femenino.", "Una elección biológica.", "Un modelo de igualdad."], correctAnswer: 1 },
+    { text: "La presión para que los hombres no expresen emociones como la tristeza es un:", options: ["Signo de madurez emocional.", "Estereotipo masculino.", "Mandato legal.", "Requisito para la igualdad."], correctAnswer: 1 },
+    { text: "Los modelos y relaciones de género igualitarios buscan que las relaciones humanas se basen en:", options: ["La superioridad de un género sobre otro.", "Igualdad de derechos, oportunidades y responsabilidades para todos.", "Mantener los estereotipos tradicionales.", "La competencia constante entre géneros."], correctAnswer: 1 },
+    { text: "Una condición fundamental para las relaciones igualitarias es el reparto equitativo de:", options: ["La riqueza generada únicamente por los hombres.", "Responsabilidades, incluyendo las del hogar y la crianza.", "Los puestos de poder, favoreciendo a las mujeres.", "Las oportunidades educativas, limitando las de los hombres."], correctAnswer: 1 },
+    { text: "Eliminar los estereotipos de género tradicionales favorece:", options: ["La confusión de roles.", "La libertad individual de elección y desarrollo personal.", "El mantenimiento del status quo.", "La desigualdad social."], correctAnswer: 1 },
+    { text: "En el ámbito familiar, una relación de género igualitaria implica que las decisiones:", options: ["Las toma el miembro de mayor edad.", "Se toman conjuntamente, respetando a todos.", "Las toma el principal proveedor económico.", "Se basan en roles de género tradicionales."], correctAnswer: 1 },
+    { text: "Promover la conciliación de la vida laboral, familiar y personal tanto para padres como para madres es una medida del ámbito:", options: ["Educativo.", "Social (medios).", "Laboral y político (leyes).", "Romántico."], correctAnswer: 2 },
+    { text: "El doble rasero al juzgar comportamientos sexuales según el género va en contra de:", options: ["Los estereotipos masculinos.", "Los modelos de relaciones de género igualitarios.", "Las tradiciones culturales ancestrales.", "La biología reproductiva."], correctAnswer: 1 },
+    { text: "La afirmación 'la igualdad de género no es solo un asunto de mujeres, sino una condición necesaria para el progreso de toda la sociedad' sugiere que:", options: ["Los hombres no se benefician de la igualdad de género.", "La igualdad de género es un objetivo secundario.", "Es un tema que concierne y beneficia a toda la comunidad.", "Solo las mujeres deben luchar por la igualdad."], correctAnswer: 2 },
+    { text: "Las leyes que garantizan la igualdad de derechos y protegen contra la discriminación de género son un componente importante del ámbito:", options: ["Familiar.", "Político.", "Social informal.", "Educativo exclusivamente."], correctAnswer: 1 }
+]
+            },
+            "poder_grupo": {
+                title: "8. El Poder del Grupo 💪",
+                summaryTitle: "La Influencia del Grupo",
+                content: [
+                    `<h3>Desarrollo Personal Dentro del Grupo: Descubriendo el Yo en el Nosotros 🤝</h3>
+                    <p>Los grupos son mucho más que simples conjuntos de personas; son espacios fundamentales para nuestro <strong>desarrollo personal</strong>. Formar parte de grupos (amigos, familia, equipos deportivos, clubs, etc.) nos impacta de maneras profundas:</p>
+                    <ul>
+                        <li><strong>Laboratorios para el Autodescubrimiento:</strong> Los grupos ofrecen un entorno, a menudo seguro, donde podemos probar nuevas ideas, explorar diferentes intereses y, a veces, descubrir talentos o pasiones que desconocíamos.</li>
+                        <li><strong>Experimentación con Identidades:</strong> Especialmente durante la adolescencia, los grupos permiten "probarse" diferentes roles o "máscaras". Esto no es para esconderse, sino para explorar y definir quiénes somos realmente, qué nos gusta y qué valoramos.</li>
+                        <li><strong>Desempeño de Roles y Responsabilidades:</strong> Cada grupo suele tener una estructura, formal o informal, con diferentes roles y responsabilidades. Al asumir estos roles (líder, mediador, organizador, etc.), desarrollamos un conjunto de habilidades valiosas (comunicación, negociación, planificación) que nos acompañarán en la vida.</li>
+                        <li><strong>Apoyo y Desafíos:</strong> Los grupos pueden ser una importante red de seguridad emocional y social; nos apoyan en momentos difíciles y celebran nuestros logros. Pero también pueden presentarnos desafíos, conflictos o críticas que, bien gestionados, nos ayudan a crecer, a ser más resilientes y a confiar en nuestra capacidad para superar obstáculos.</li>
+                    </ul>`,
+                    `<h3>La Influencia del Grupo en el Individuo: La Presión de Grupo 🌀</h3>
+                    <p>Una de las influencias más conocidas del grupo es la <strong>PRESIÓN DE GRUPO</strong>. Se trata de esa fuerza, a veces sutil y otras muy directa, que sienten los individuos para <strong>ajustar sus opiniones, actitudes o comportamientos</strong> a los del grupo con el fin de ser aceptados, valorados o evitar el rechazo.</p>
+                    <div class="concept-box">
+                        <strong>Objetivo de la Presión de Grupo (desde la perspectiva del individuo):</strong> Sentirse parte, ser aceptado, evitar la exclusión.
+                    </div>
+                    <h4>¿Cómo Manejar la Presión de Grupo? 🤔</h4>
+                    <ul>
+                        <li><strong>Reconocer la Presión:</strong> El primer paso es aprender a identificar cuándo tus decisiones están siendo influenciadas por el deseo de agradar al grupo más que por tus propias convicciones.</li>
+                        <li><strong>Mantener tu Personalidad (Autoconocimiento):</strong> Reflexiona sobre tus propios valores, creencias y objetivos. Conocerse bien a uno mismo es la mejor defensa contra la presión externa. ¿Esto que me piden hacer/decir va conmigo?</li>
+                        <li><strong>Resistir Reflexivamente:</strong> Antes de tomar decisiones, especialmente en situaciones de grupo y bajo presión, tómate un momento para pensar. Pregúntate si esa decisión refleja quién eres y lo que realmente quieres o valoras. Aprende a decir "no" de forma asertiva pero respetuosa.</li>
+                        <li><strong>Manejar la Posible Exclusión:</strong> Puede haber momentos en que, por mantenerte fiel a ti mismo, te sientas excluido o incluso rechazado por un grupo. Es importante aprender a manejar estos sentimientos, recordando que tu autorrespeto y tu integridad son más valiosos que la aprobación temporal de otros que no respetan tu individualidad.</li>
+                        <li><strong>Encuentra tu "Tribu" Auténtica:</strong> Busca y conecta con personas que compartan tus intereses, valores y que te acepten por quién eres realmente. Un grupo de apoyo genuino no te presionará para que seas alguien que no eres.</li>
+                    </ul>`,
+                    `<h3>Diversidad y Convivencia Positiva en los Grupos 🌈✨</h3>
+                    <p>Los grupos se enriquecen enormemente con la diversidad de sus miembros. Celebrar esta diversidad, yendo más allá de las etiquetas simplistas, es fundamental para una convivencia positiva y constructiva.</p>
+                    <h4>Beneficios de la Diversidad</h4>
+                    <p>La diversidad en los grupos (de ideas, experiencias, habilidades, orígenes culturales, personalidades, etc.) aporta una gran variedad de puntos de vista y enfoques. Esto puede llevar a:</p>
+                    <ul>
+                        <li>Soluciones más creativas e innovadoras a los problemas.</li>
+                        <li>Un aprendizaje más rico y profundo para todos los miembros.</li>
+                        <li>Una mayor capacidad de adaptación del grupo.</li>
+                    </ul>
+                    <h4>Respeto y Apreciación</h4>
+                    <p>Aprender a <strong>respetar y apreciar las diferencias</strong> es clave para el desarrollo de una sociedad y de grupos saludables. Esto incluye el reconocimiento fundamental de que cada persona es única y merece ser tratada con <strong>dignidad y respeto</strong>, independientemente de sus diferencias culturales, de opinión, de capacidades, etc.</p>`,
+                    `<h3>Estrategias para Manejar Conflictos y Fomentar una Convivencia Positiva ✅</h3>
+                    <p>Para que un grupo funcione bien y sus miembros se sientan a gusto, especialmente cuando hay diversidad, es necesario implementar estrategias activas para una convivencia positiva. Algunas de ellas son:</p>
+                    <ul>
+                        <li><strong>Comunicación Abierta y Asertiva:</strong> Fomentar un ambiente donde todos se sientan seguros para expresar sus pensamientos y sentimientos de manera clara, directa y constructiva, y donde se practique la escucha activa y respetuosa. Evitar malentendidos es clave.</li>
+                        <li><strong>Empatía:</strong> Animar a los miembros del grupo a ponerse en el lugar del otro, a tratar de entender sus perspectivas y sentimientos, incluso si no se comparten.</li>
+                        <li><strong>Identificar Intereses y Objetivos Comunes:</strong> En lugar de centrarse solo en los aspectos que separan a los miembros, es útil buscar y enfocarse en aquello que los une, en las metas o valores compartidos.</li>
+                        <li><strong>Tolerancia:</strong> Fomentar la tolerancia implica aceptar y convivir de manera respetuosa con personas que son diferentes a nosotros o que tienen opiniones distintas, siempre dentro de un marco de respeto a los derechos fundamentales.</li>
+                        <li><strong>Inclusión Activa:</strong> No basta con no excluir; hay que incluir activamente a todos los miembros del grupo en las actividades, discusiones y toma de decisiones, asegurando que todos se sientan valorados y parte del conjunto.</li>
+                        <li><strong>Toma de Decisiones Colaborativa:</strong> Involucrar a todos los miembros (o a sus representantes legítimos) en el proceso de toma de decisiones puede aumentar el compromiso, la satisfacción y la probabilidad de que las decisiones sean aceptadas y exitosas, disminuyendo así los conflictos.</li>
+                        <li><strong>Resolución Constructiva de Conflictos:</strong> Aprender a manejar y resolver los conflictos (que son inevitables en cualquier grupo) de manera pacífica y constructiva es fundamental. Esto incluye identificar las causas subyacentes de los conflictos, buscar soluciones justas que beneficien a todas las partes en la medida de lo posible ("ganar-ganar"), y trabajar para restaurar las relaciones dañadas.</li>
+                    </ul>
+                    <div class="concept-box">
+                        <strong>Impacto Final:</strong> Una convivencia positiva en los grupos no solo mejora la calidad de vida y el bienestar de sus miembros individuales, sino que también fortalece a toda la sociedad. Al valorar la diversidad y el respeto mutuo, los adolescentes y jóvenes pueden contribuir a construir un mundo más justo, armonioso y colaborativo.
+                    </div>`
+                ],
+                questions: [
+    // Las 12 preguntas que ya teníamos (revisadas y con comas correctas)
+    { text: "¿Cómo ayudan los grupos al autodescubrimiento según el texto?", options: ["Limitando la exposición a nuevas ideas.", "Ofreciendo un espacio para probar ideas y explorar intereses.", "Fomentando el aislamiento individual.", "Estableciendo roles fijos e inamovibles desde el inicio."], correctAnswer: 1 },
+    { text: "La fuerza que sienten los individuos para ajustar sus opiniones o comportamientos a los del grupo para ser aceptados se llama:", options: ["Liderazgo carismático.", "Presión de grupo.", "Desarrollo de identidad.", "Cohesión social positiva."], correctAnswer: 1 },
+    { text: "Una estrategia para manejar la presión de grupo es:", options: ["Ceder siempre para evitar conflictos.", "Reflexionar sobre los propios valores y tomarse un momento antes de decidir.", "Criticar abiertamente a quienes no siguen al grupo.", "Ignorar completamente las opiniones del grupo."], correctAnswer: 1 },
+    { text: "¿Cuál es un beneficio de la diversidad en los grupos?", options: ["Asegura que todos piensen de la misma manera.", "Puede llevar a soluciones más creativas e innovadoras.", "Reduce la necesidad de comunicación.", "Simplifica la toma de decisiones al haber menos opciones."], correctAnswer: 1 },
+    { text: "Aprender a respetar y apreciar las diferencias es clave para:", options: ["Fomentar el etnocentrismo dentro del grupo.", "El desarrollo de grupos saludables y una sociedad constructiva.", "Aumentar los malentendidos y conflictos.", "Mantener las etiquetas y estereotipos."], correctAnswer: 1 },
+    { text: "Ponerse en el lugar del otro y considerar diferentes puntos de vista es una manifestación de:", options: ["Intolerancia.", "Empatía.", "Presión de grupo.", "Exclusión activa."], correctAnswer: 1 },
+    { text: "Involucrar a todos los miembros en la toma de decisiones para aumentar el compromiso se refiere a:", options: ["Imposición de ideas.", "Toma de decisiones colaborativa.", "Exclusión selectiva.", "Comunicación unidireccional."], correctAnswer: 1 },
+    { text: "Según el texto, ¿qué se debe hacer si, por mantenerte fiel a ti mismo, te sientes excluido?", options: ["Cambiar inmediatamente para ser aceptado.", "Recordar que el autorrespeto es más valioso que la aprobación temporal.", "Culpar al grupo por no entenderte.", "Aislarte de cualquier otro grupo futuro."], correctAnswer: 1 },
+    { text: "Asumir roles y responsabilidades dentro de un grupo ayuda a desarrollar:", options: ["Únicamente la capacidad de seguir órdenes.", "Un conjunto de habilidades valiosas como la comunicación y la planificación.", "Una mayor dependencia del grupo.", "Una visión negativa del trabajo en equipo."], correctAnswer: 1 },
+    { text: "Fomentar la tolerancia implica:", options: ["Aceptar y convivir respetuosamente con personas diferentes, dentro de un marco de derechos.", "Estar de acuerdo con todas las opiniones y prácticas sin excepción.", "Ignorar las diferencias para evitar discusiones.", "Presionar a otros para que adopten nuestras creencias."], correctAnswer: 0 },
+    { text: "Identificar intereses y objetivos comunes en un grupo ayuda a:", options: ["Acentuar las diferencias individuales.", "Enfocarse en lo que une a los miembros.", "Generar más conflictos sobre esos intereses.", "Distraer de los problemas reales del grupo."], correctAnswer: 1 },
+    { text: "Una convivencia positiva en los grupos, según la conclusión, ¿qué efecto tiene en la sociedad?", options: ["La debilita al promover demasiada diversidad.", "No tiene ningún impacto significativo en la sociedad en general.", "La fortalece y contribuye a un mundo más justo y armonioso.", "Genera más individualismo y competencia."], correctAnswer: 2 },
+    // Comienzan las 18 preguntas adicionales
+    { text: "Los grupos son importantes para el desarrollo personal porque actúan como 'laboratorios para el autodescubrimiento', permitiendo:", options: ["Confirmar únicamente las ideas preconcebidas.", "Probar nuevas ideas y explorar intereses.", "Evitar cualquier tipo de experimentación.", "Aislarse de las influencias externas."], correctAnswer: 1 },
+    { text: "Experimentar con diferentes identidades dentro de un grupo ayuda a:", options: ["Crear una personalidad falsa y superficial.", "Explorar y definir quiénes somos realmente.", "Perder la propia identidad.", "Satisfacer las expectativas de todos sin cuestionar."], correctAnswer: 1 },
+    { text: "Desempeñar roles y responsabilidades en un grupo contribuye a desarrollar:", options: ["Únicamente la capacidad de seguir órdenes ciegamente.", "Habilidades valiosas como la comunicación y la negociación.", "Una aversión al trabajo en equipo.", "Una dependencia total de los demás miembros."], correctAnswer: 1 },
+    { text: "La 'presión de grupo' se define como la fuerza que sienten los individuos para:", options: ["Mantener siempre su individualidad a toda costa.", "Ajustar sus opiniones o comportamientos a los del grupo para ser aceptados.", "Criticar constantemente las normas del grupo.", "Liderar el grupo en todas las situaciones."], correctAnswer: 1 },
+    { text: "Una de las principales motivaciones para ceder a la presión de grupo es:", options: ["El deseo de destacar y ser diferente.", "Sentirse parte del grupo y evitar la exclusión.", "La búsqueda de la verdad absoluta.", "La necesidad de imponer las propias ideas."], correctAnswer: 1 },
+    { text: "Para manejar la presión de grupo, el primer paso es:", options: ["Confrontar agresivamente al grupo.", "Ceder inmediatamente para evitar problemas.", "Aprender a identificar cuándo se está siendo influenciado por el grupo.", "Abandonar el grupo sin dar explicaciones."], correctAnswer: 2 },
+    { text: "Reflexionar sobre los propios valores y creencias es una estrategia para:", options: ["Aumentar la conformidad con el grupo.", "Mantener la propia personalidad frente a la presión.", "Criticar los valores de los demás.", "Justificar cualquier acción del grupo."], correctAnswer: 1 },
+    { text: "Decir 'no' de forma asertiva pero respetuosa es una forma de:", options: ["Generar conflicto innecesario.", "Resistir reflexivamente a la presión de grupo.", "Mostrar debilidad ante el grupo.", "Perder el respeto de los demás."], correctAnswer: 1 },
+    { text: "Si por mantenerte fiel a ti mismo te sientes excluido, el texto recomienda:", options: ["Cambiar tus valores para ser aceptado inmediatamente.", "Recordar que el autorrespeto es más valioso que la aprobación temporal.", "Criticar duramente al grupo que te excluye.", "No volver a unirte a ningún grupo."], correctAnswer: 1 },
+    { text: "La diversidad en los grupos (de ideas, experiencias, etc.) puede llevar a:", options: ["Soluciones menos creativas y más uniformes.", "Soluciones más creativas e innovadoras a los problemas.", "Un aprendizaje más limitado para los miembros.", "Una menor capacidad de adaptación del grupo."], correctAnswer: 1 },
+    { text: "Aprender a respetar y apreciar las diferencias es clave para:", options: ["Fomentar el etnocentrismo dentro del grupo.", "El desarrollo de grupos saludables y una sociedad constructiva.", "Aumentar los malentendidos y conflictos.", "Mantener las etiquetas y estereotipos."], correctAnswer: 1 },
+    { text: "Fomentar un ambiente donde todos se sientan seguros para expresar sus pensamientos y practicar la escucha activa se refiere a:", options: ["La imposición de una única opinión.", "La comunicación abierta y asertiva.", "La evitación de cualquier discusión.", "La crítica constante entre miembros."], correctAnswer: 1 },
+    { text: "Animar a los miembros del grupo a ponerse en el lugar del otro para entender sus perspectivas es:", options: ["Una forma de manipulación.", "Empatía.", "Una pérdida de tiempo en discusiones.", "Una manera de fomentar el individualismo."], correctAnswer: 1 },
+    { text: "Buscar y enfocarse en aquello que une a los miembros del grupo, en lugar de solo en lo que los separa, es una estrategia para:", options: ["Aumentar las divisiones internas.", "Identificar intereses y objetivos comunes.", "Ignorar los problemas reales del grupo.", "Fomentar la competencia destructiva."], correctAnswer: 1 },
+    { text: "Aceptar y convivir respetuosamente con personas diferentes, dentro de un marco de derechos, es la definición de:", options: ["Conformidad ciega.", "Tolerancia.", "Indiferencia.", "Presión de grupo exitosa."], correctAnswer: 1 },
+    { text: "Asegurar que todos los miembros se sientan valorados y parte del conjunto es el objetivo de la:", options: ["Exclusión selectiva.", "Inclusión activa.", "Jerarquización estricta.", "Competencia interna."], correctAnswer: 1 },
+    { text: "Identificar las causas subyacentes de los conflictos y buscar soluciones justas es parte de:", options: ["Evitar cualquier tipo de conflicto.", "La resolución constructiva de conflictos.", "La imposición de la voluntad del más fuerte.", "La disolución del grupo ante el primer desacuerdo."], correctAnswer: 1 },
+    { text: "El texto concluye que una convivencia positiva en los grupos, basada en la diversidad y el respeto, contribuye a:", options: ["Debilitar la estructura social.", "Un mundo más justo, armonioso y colaborativo.", "Aumentar el individualismo extremo.", "La homogeneización cultural completa."], correctAnswer: 1 }
+]
+            },
+            "transicion_adulta": {
+                title: "9. Transición a la Vida Adulta 🚶‍♀️🚶‍♂️",
+                summaryTitle: "El Camino Hacia la Adultez",
+                content: [
+                    `<h3>Ritos de Paso y Variaciones Culturales en la Transición 🌐</h3>
+                    <p>La transición de la juventud a la vida adulta es un proceso universal, pero la forma en que se marca y se experimenta varía enormemente entre culturas. Tradicionalmente, muchas sociedades han tenido <strong>ritos de paso</strong> específicos (ceremonias, pruebas, rituales) que simbolizan y facilitan este cambio de estatus.</p>
+                    <h4>Impacto de la Globalización 🌍</h4>
+                    <p>En el mundo actual, la <strong>globalización</strong> (la creciente interconexión e interdependencia entre países y culturas) ha comenzado a influir en estos procesos. Por un lado, puede llevar a una cierta homogeneización, reduciendo algunas diferencias culturales en cómo se concibe la transición a la adultez.</p>
+                    <p>Sin embargo, incluso en esta era de conexión global:</p>
+                    <ul>
+                        <li>Las <strong>tradiciones culturales</strong> continúan desempeñando un papel crucial en muchas comunidades, marcando la identidad y el sentido de pertenencia.</li>
+                        <li>La globalización no ha borrado por completo estas prácticas; en muchos casos, incluso ha podido reforzar la importancia de mantener vivas las tradiciones como un medio para preservar la identidad cultural frente a influencias externas.</li>
+                    </ul>
+                    <p>Además, es fundamental no olvidar las <strong>diferencias individuales</strong> dentro de cada cultura; no todas las personas experimentan esta transición de la misma manera, incluso compartiendo un mismo contexto cultural.</p>`,
+                    `<h3>Factores que Influyen en la Transición y la Adquisición de Autonomía 🔑</h3>
+                    <p>En el mundo contemporáneo, diversos factores interrelacionados influyen en cómo los jóvenes transitan hacia la vida adulta y adquieren mayor autonomía e independencia. Algunos de los más significativos son:</p>
+                    <h4>1. Educación Prolongada 🎓</h4>
+                    <p>En muchas sociedades, ha habido un aumento en los años de <strong>educación obligatoria</strong> y también una mayor expectativa social de que los jóvenes permanezcan más tiempo en el sistema educativo, buscando formación superior o especializada.</p>
+                    <p>La duración y el enfoque de la educación pueden afectar significativamente el camino hacia la adultez, ya que completar los estudios a menudo se considera un paso importante (y a veces un prerrequisito) para alcanzar ciertos marcadores de la vida adulta, como un empleo estable.</p>
+                    <p><strong>Impacto en la Autonomía:</strong></p>
+                    <ul>
+                        <li>En algunos contextos, se espera que los jóvenes empiecen a trabajar cuanto antes, lo que podría adelantar ciertos aspectos de su transición a la vida adulta (independencia económica).</li>
+                        <li>En otros, donde se valora mucho la educación superior, esto puede retrasar la búsqueda de empleo a tiempo completo y, por ende, la independencia económica y la formación de un hogar propio.</li>
+                    </ul>`,
+                    `<h4>2. Oportunidades de Empleo y Vivienda 💼🏡</h4>
+                    <p>Muchos jóvenes hoy en día se enfrentan a un mercado laboral competitivo y, en ocasiones, precario, con dificultades para encontrar un <strong>empleo estable y bien remunerado</strong> que les permita una independencia económica sólida.</p>
+                    <p>A esto se suma, en muchas ciudades, la <strong>escasez de vivienda asequible</strong>, ya sea para comprar o alquilar.</p>
+                    <p><strong>Impacto en la Autonomía:</strong></p>
+                    <ul>
+                        <li>Estas dificultades para encontrar empleo y/o vivienda pueden <strong>retrasar significativamente la independencia financiera</strong> y, consecuentemente, la capacidad de formar un hogar propio, uno de los marcadores tradicionales de la adultez. Esto a veces se conoce como "síndrome del nido lleno prolongado" o "adultescencia".</li>
+                    </ul>`,
+                    `<h4>3. Redes Sociales y Tecnología 📱💻</h4>
+                    <p>La tecnología digital y las redes sociales son una parte integral de la vida de los jóvenes actuales.</p>
+                    <p>Por un lado, ofrecen nuevas y poderosas vías para la <strong>expresión personal, la conexión social, el acceso a la información</strong> e incluso el aprendizaje autodidacta a través de internet.</p>
+                    <p>Sin embargo, la tecnología también puede ser una "espada de doble filo", presentando desafíos importantes en términos de:</p>
+                    <ul>
+                        <li>Privacidad y seguridad de datos.</li>
+                        <li>Bienestar mental (comparación social, ciberacoso, adicción).</li>
+                        <li>Difusión de desinformación.</li>
+                    </ul>
+                    <p><strong>Impacto en la Autonomía:</strong></p>
+                    <ul>
+                        <li>El mayor acceso a la información y la capacidad de aprender por uno mismo pueden, teóricamente, contribuir a una madurez y autonomía más tempranas.</li>
+                        <li>No obstante, también pueden generar nuevas formas de dependencia (ej. de la validación online), problemas en la gestión del tiempo o dificultades para discernir información fiable, lo que podría, paradójicamente, obstaculizar o retrasar ciertos aspectos de la transición a una adultez autónoma y crítica.</li>
+                    </ul>`,
+                    `<h4>4. Cambios Socioculturales 🔄</h4>
+                    <p>Las normas sociales y culturales en torno a lo que significa "ser adulto" también han experimentado cambios significativos en las últimas décadas. Por ejemplo:</p>
+                    <ul>
+                        <li>Hay una tendencia generalizada a la <strong>postergación del matrimonio y la paternidad/maternidad</strong> en muchas sociedades occidentales.</li>
+                        <li>Mayor aceptación de diversos modelos de familia y trayectorias vitales.</li>
+                        <li>Un período de exploración más largo durante la juventud ("adultez emergente").</li>
+                    </ul>
+                    <p><strong>Impacto en la Autonomía:</strong></p>
+                    <ul>
+                        <li>Como resultado de factores económicos, culturales o personales (o una combinación de ellos), algunos jóvenes pueden <strong>vivir con sus familias de origen durante más tiempo</strong> que en generaciones anteriores, incluso teniendo empleo. Esto redefine los caminos hacia la autonomía residencial y familiar.</li>
+                    </ul>
+                    <div class="concept-box">
+                        <strong>Conclusión:</strong> La transición a la vida adulta es un proceso complejo y multifactorial, moldeado tanto por el contexto cultural y socioeconómico como por las decisiones y características individuales. Ya no existe una única "ruta" lineal hacia la adultez.
+                    </div>`
+                ],
+                questions: [
+    // Las 12 preguntas que ya teníamos (revisadas y con comas correctas)
+    { text: "¿Qué ha comenzado a reducir las diferencias culturales en la transición a la adultez, según el texto?", options: ["El aislamiento cultural.", "La globalización.", "El fortalecimiento de las tradiciones locales únicamente.", "La disminución de la educación."], correctAnswer: 1 },
+    { text: "A pesar de la globalización, ¿qué sigue desempeñando un papel crucial en la transición a la adultez en muchas comunidades?", options: ["La tecnología exclusivamente.", "Las tradiciones culturales.", "Las leyes internacionales uniformes.", "La homogeneización total de las costumbres."], correctAnswer: 1 },
+    { text: "El aumento en los años de educación obligatoria y la expectativa de mayor formación pueden:", options: ["Acelerar siempre la independencia económica.", "Afectar el camino hacia la adultez, considerándose un paso importante.", "No tener ningún impacto en la transición a la adultez.", "Reducir la necesidad de adquirir autonomía."], correctAnswer: 1 },
+    { text: "Las dificultades para encontrar empleo estable y vivienda asequible pueden principalmente:", options: ["Acelerar la formación de un hogar propio.", "Retrasar la independencia financiera y la formación de un hogar propio.", "Fomentar la autonomía desde una edad más temprana.", "No influir en la transición a la adultez."], correctAnswer: 1 },
+    { text: "Las redes sociales y la tecnología ofrecen nuevas vías para la expresión y el aprendizaje, pero también presentan desafíos como:", options: ["La total eliminación de la privacidad.", "Problemas de privacidad, seguridad y bienestar mental.", "La incapacidad de conectar con otros.", "La reducción del acceso a la información."], correctAnswer: 1 },
+    { text: "La postergación del matrimonio y la paternidad son ejemplos de:", options: ["Factores que aceleran la adultez tradicional.", "Cambios socioculturales que influyen en cómo se experimenta la adultez.", "Problemas exclusivos de sociedades no globalizadas.", "Tradiciones culturales inamovibles."], correctAnswer: 1 },
+    { text: "Según el texto, la globalización en relación a las tradiciones culturales:", options: ["Siempre las borra completamente.", "En muchos casos, ha reforzado la importancia de mantenerlas.", "No tiene ningún efecto sobre ellas.", "Las convierte en algo puramente comercial."], correctAnswer: 1 },
+    { text: "Completar los estudios es a menudo considerado un paso importante para:", options: ["Evitar la vida adulta.", "Llegar a la vida adulta y obtener un empleo.", "Reducir la autonomía personal.", "Mantenerse dependiente económicamente."], correctAnswer: 1 },
+    { text: "El acceso a la información y la capacidad de aprender por uno mismo gracias a la tecnología puede contribuir a la adultez, pero también puede generar:", options: ["Independencia total e infalibilidad.", "Dependencia y desafíos en la gestión del tiempo.", "Aislamiento social completo.", "Desinterés por el aprendizaje formal."], correctAnswer: 1 },
+    { text: "Vivir con las familias de origen durante más tiempo en la juventud puede ser resultado de:", options: ["Un deseo universal de evitar la independencia.", "Factores económicos o culturales.", "La ausencia de globalización.", "Leyes que lo exigen."], correctAnswer: 1 },
+    { text: "Los 'ritos de paso' son:", options: ["Exclusivos de la era de la globalización.", "Ceremonias o rituales que simbolizan el cambio de estatus, como la transición a la adultez.", "Prohibidos en la mayoría de las culturas modernas.", "Una forma de retrasar la llegada a la adultez."], correctAnswer: 1 },
+    { text: "La conclusión sobre la transición a la vida adulta es que:", options: ["Es un proceso simple y lineal igual para todos.", "Es un proceso complejo y multifactorial sin una única ruta.", "Está determinada únicamente por la tecnología.", "Se ha vuelto más fácil y rápida que nunca antes."], correctAnswer: 1 },
+    // Comienzan las 18 preguntas adicionales
+    { text: "Los 'ritos de paso' son definidos en el contexto de la transición a la adultez como:", options: ["Leyes modernas que regulan la mayoría de edad.", "Ceremonias, pruebas o rituales que simbolizan y facilitan este cambio de estatus.", "Exclusivamente celebraciones festivas sin significado profundo.", "Procesos educativos formales obligatorios."], correctAnswer: 1 },
+    { text: "El impacto de la globalización en la transición a la adultez puede llevar a:", options: ["Un aumento drástico de las diferencias culturales.", "Una cierta homogeneización, reduciendo algunas diferencias culturales.", "La eliminación total de las tradiciones culturales.", "El aislamiento completo de las culturas locales."], correctAnswer: 1 },
+    { text: "Incluso en la era global, las tradiciones culturales en la transición a la adultez:", options: ["Han perdido toda su importancia.", "Continúan desempeñando un papel crucial en muchas comunidades.", "Son reemplazadas completamente por normas globales.", "Solo se conservan en museos."], correctAnswer: 1 },
+    { text: "El aumento en los años de educación obligatoria y la expectativa de mayor formación es un factor que:", options: ["No tiene relación con la transición a la adultez.", "Puede afectar el camino hacia la adultez, siendo completar estudios un paso importante.", "Siempre acelera la independencia económica.", "Reduce la autonomía de los jóvenes."], correctAnswer: 1 },
+    { text: "En contextos donde se valora mucho la educación superior, la búsqueda de empleo y la independencia económica pueden:", options: ["Adelantarse significativamente.", "Retrasarse.", "Ser irrelevantes para la adultez.", "Ocurrir siempre antes de iniciar la educación superior."], correctAnswer: 1 },
+    { text: "Las dificultades para encontrar empleo estable y bien remunerado pueden impactar la autonomía al:", options: ["Fomentar la creación inmediata de un hogar propio.", "Retrasar la independencia financiera.", "No tener efecto en la capacidad de vivir de forma independiente.", "Acelerar la transición a roles adultos tradicionales."], correctAnswer: 1 },
+    { text: "La escasez de vivienda asequible es un factor que puede:", options: ["Facilitar la independencia residencial de los jóvenes.", "Retrasar la capacidad de formar un hogar propio.", "No influir en las decisiones de vivienda.", "Hacer que los jóvenes prefieran vivir solos desde temprana edad."], correctAnswer: 1 },
+    { text: "Las redes sociales y la tecnología, además de ofrecer vías de expresión, presentan desafíos en términos de:", options: ["Exceso de privacidad y seguridad.", "Privacidad, seguridad y bienestar mental.", "Falta de acceso a la información.", "Aislamiento social total."], correctAnswer: 1 },
+    { text: "El mayor acceso a la información gracias a la tecnología puede contribuir a la madurez, pero también puede generar:", options: ["Una total inmunidad a la desinformación.", "Nuevas formas de dependencia o problemas en la gestión del tiempo.", "Desinterés completo por la conexión social.", "Una comprensión perfecta e inmediata de cualquier tema."], correctAnswer: 1 },
+    { text: "La tendencia a la postergación del matrimonio y la paternidad es un ejemplo de:", options: ["Un factor que acelera la asunción de roles adultos tradicionales.", "Un cambio sociocultural que influye en la experiencia de la adultez.", "Una norma impuesta por la globalización sin variación local.", "Un fenómeno exclusivo de sociedades no industrializadas."], correctAnswer: 1 },
+    { text: "Vivir con las familias de origen durante más tiempo en la juventud puede ser resultado de:", options: ["Un deseo universal de dependencia continua.", "Factores económicos, culturales o personales combinados.", "La ausencia total de oportunidades educativas.", "Una imposición legal en la mayoría de los países."], correctAnswer: 1 },
+    { text: "El texto menciona que, además del contexto cultural, en la transición a la adultez también influyen:", options: ["Únicamente las leyes internacionales.", "Las diferencias individuales dentro de cada cultura.", "Solo los factores económicos globales.", "Exclusivamente las tradiciones ancestrales."], correctAnswer: 1 },
+    { text: "La idea de que completar los estudios es un 'prerrequisito' para ciertos marcadores de la vida adulta se relaciona con el factor de:", options: ["Cambios socioculturales.", "Redes sociales y tecnología.", "Educación prolongada.", "Oportunidades de empleo y vivienda."], correctAnswer: 2 },
+    { text: "El 'síndrome del nido lleno prolongado' o 'adultescencia' se relaciona con:", options: ["El deseo de los padres de que los hijos no se independicen.", "El retraso en la independencia financiera y residencial de los jóvenes.", "Una nueva forma de rito de paso cultural.", "El aumento de la natalidad en jóvenes adultos."], correctAnswer: 1 },
+    { text: "La capacidad de discernir información fiable es un desafío asociado al factor de:", options: ["Educación prolongada.", "Redes sociales y tecnología.", "Cambios socioculturales.", "Oportunidades de vivienda."], correctAnswer: 1 },
+    { text: "Una mayor aceptación de diversos modelos de familia y trayectorias vitales es un ejemplo de:", options: ["Impacto de la globalización en las tradiciones.", "Cambio sociocultural.", "Factor educativo.", "Desafío tecnológico."], correctAnswer: 1 },
+    { text: "La conclusión del texto sobre la transición a la vida adulta es que:", options: ["Sigue una ruta única y lineal para todos.", "Es un proceso complejo y multifactorial, sin una única 'ruta' lineal.", "Está determinada exclusivamente por las decisiones individuales, sin influencia social.", "Se ha simplificado enormemente gracias a la tecnología."], correctAnswer: 1 },
+    { text: "Que la globalización 'no ha borrado por completo estas prácticas [tradicionales]' sugiere que:", options: ["La globalización es un mito.", "Las culturas locales son completamente resistentes al cambio.", "Existe una coexistencia e interacción entre lo global y lo local.", "Las tradiciones culturales siempre son más fuertes que la globalización."], correctAnswer: 2 }
+]
+            }
+        };
+
+        // --- El resto del JavaScript (funciones initApp, showLessonView, etc.) permanece igual que en la respuesta anterior ---
+        // ... (Copiar aquí todo el JavaScript desde la declaración de const lessonNavEl hasta el final del script de la respuesta anterior) ...
+        // --- DOM Elements ---
+        const lessonNavEl = document.getElementById('lesson-nav');
+        const lessonViewContainerEl = document.getElementById('lesson-view-container');
+        const lessonViewTitleEl = document.getElementById('lesson-view-title');
+        const lessonContentAreaEl = document.getElementById('lesson-content-area');
+        const lessonPaginationControlsEl = document.getElementById('lesson-pagination-controls');
+        const lessonPrevPageBtnEl = document.getElementById('lesson-prev-page-btn');
+        const lessonNextPageBtnEl = document.getElementById('lesson-next-page-btn');
+        const lessonPageIndicatorEl = document.getElementById('lesson-page-indicator');
+        const lessonScoreInfoEl = document.getElementById('lesson-score-info');
+        const startTestBtnContainerEl = document.getElementById('start-test-btn-container');
+        const startTestBtnEl = document.getElementById('start-test-btn');
+        const testAreaContainerEl = document.getElementById('test-area-container');
+        const testTitleEl = document.getElementById('test-title');
+        const testFormEl = document.getElementById('test-form');
+        const questionContainerEl = document.getElementById('question-container');
+        const submitTestBtnEl = document.getElementById('submit-test-btn');
+        const scoreContainerEl = document.getElementById('score-container');
+        const scoreDisplayEl = document.getElementById('score-display');
+        const feedbackMessageEl = document.getElementById('feedback-message');
+        const retakeTestBtnEl = document.getElementById('retake-test-btn');
+        const backToLessonBtnEl = document.getElementById('back-to-lesson-btn');
+
+        let currentTopicId = null;
+        let currentLessonPage = 0;
+        let currentQuestions = [];
+
+        function initApp() {
+            Object.keys(lessonsData).forEach(topicId => {
+                const lesson = lessonsData[topicId];
+                const button = document.createElement('button');
+                button.textContent = lesson.title;
+                button.dataset.topicId = topicId;
+                button.addEventListener('click', () => showLessonView(topicId));
+                lessonNavEl.appendChild(button);
+            });
+
+            startTestBtnEl.addEventListener('click', () => {
+                if (currentTopicId) startTest(currentTopicId);
+            });
+            
+            testFormEl.addEventListener('submit', function(event) {
+                event.preventDefault(); 
+                handleSubmitTest();
+            });
+
+            retakeTestBtnEl.addEventListener('click', () => {
+                 if (currentTopicId) startTest(currentTopicId);
+            });
+            backToLessonBtnEl.addEventListener('click', () => {
+                if (currentTopicId) showLessonView(currentTopicId); 
+            });
+            lessonPrevPageBtnEl.addEventListener('click', () => {
+                if (currentLessonPage > 0) {
+                    currentLessonPage--;
+                    displayCurrentLessonPage();
+                }
+            });
+            lessonNextPageBtnEl.addEventListener('click', () => {
+                const lesson = lessonsData[currentTopicId];
+                if (lesson && currentLessonPage < lesson.content.length - 1) {
+                    currentLessonPage++;
+                    displayCurrentLessonPage();
+                }
+            });
+        }
+
+        function setActiveNavButton(topicId) {
+            lessonNavEl.querySelectorAll('button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.topicId === topicId);
+            });
+        }
+        
+        function showWelcomeMessage() {
+            lessonViewTitleEl.textContent = "Bienvenido/a 👋";
+            lessonContentAreaEl.innerHTML = `
+                <p>Selecciona una lección del menú superior para comenzar a aprender. Cada lección te presentará un resumen detallado con los conceptos más relevantes.</p>
+                <p>Podrás navegar por el contenido de la lección si es extenso y, al finalizar, ¡ponerte a prueba con un test! 🧠</p>`;
+            startTestBtnContainerEl.classList.add('hidden');
+            lessonScoreInfoEl.classList.add('hidden');
+            lessonPaginationControlsEl.classList.add('hidden');
+            
+            lessonViewContainerEl.classList.remove('hidden');
+            testAreaContainerEl.classList.add('hidden');
+            scoreContainerEl.classList.add('hidden');
+            setActiveNavButton(null);
+        }
+
+        function showLessonView(topicId) {
+            currentTopicId = topicId;
+            currentLessonPage = 0; 
+            const lesson = lessonsData[topicId];
+
+            if (!lesson) { console.error("Lección no encontrada:", topicId); showWelcomeMessage(); return; }
+
+            lessonViewTitleEl.textContent = lesson.summaryTitle || lesson.title;
+            displayCurrentLessonPage(); 
+            
+            const savedScore = localStorage.getItem(`score_${topicId}`);
+            const questionsForTopic = lesson.questions || [];
+            const totalQForDisplay = questionsForTopic.length > 0 ? Math.min(10, questionsForTopic.length) : 10;
+
+            if (savedScore !== null) {
+                lessonScoreInfoEl.textContent = `Última puntuación para este tema: ${savedScore}/${totalQForDisplay}.`;
+                lessonScoreInfoEl.classList.remove('hidden');
+            } else {
+                lessonScoreInfoEl.classList.add('hidden');
+            }
+            
+            lessonViewContainerEl.classList.remove('hidden');
+            testAreaContainerEl.classList.add('hidden');
+            scoreContainerEl.classList.add('hidden');
+            setActiveNavButton(topicId);
+        }
+
+        function displayCurrentLessonPage() {
+            const lesson = lessonsData[currentTopicId];
+            if (!lesson || !lesson.content || lesson.content.length === 0) {
+                lessonContentAreaEl.innerHTML = "<p>Contenido no disponible para esta lección.</p>";
+                lessonPaginationControlsEl.classList.add('hidden');
+                startTestBtnContainerEl.classList.remove('hidden'); 
+                return;
+            }
+
+            lessonContentAreaEl.innerHTML = lesson.content[currentLessonPage];
+            
+            const totalPages = lesson.content.length;
+            if (totalPages > 1) {
+                lessonPaginationControlsEl.classList.remove('hidden');
+                lessonPrevPageBtnEl.disabled = (currentLessonPage === 0);
+                lessonNextPageBtnEl.disabled = (currentLessonPage === totalPages - 1);
+                lessonPageIndicatorEl.textContent = `Página ${currentLessonPage + 1} de ${totalPages}`;
+                
+                lessonPrevPageBtnEl.classList.remove('hidden');
+                lessonNextPageBtnEl.classList.remove('hidden');
+                 if (currentLessonPage === 0) {
+                    lessonPrevPageBtnEl.classList.add('hidden');
+                 }
+                 if (currentLessonPage === totalPages - 1) { 
+                    lessonNextPageBtnEl.classList.add('hidden');
+                }
+
+            } else { 
+                lessonPaginationControlsEl.classList.add('hidden');
+            }
+            
+            if (currentLessonPage === totalPages - 1) { 
+                startTestBtnContainerEl.classList.remove('hidden');
+            } else {
+                startTestBtnContainerEl.classList.add('hidden');
+            }
+        }
+        
+        function startTest(topicId) { 
+            const lesson = lessonsData[topicId];
+            const questionsForTopic = lesson.questions || [];
+
+            if (!lesson || questionsForTopic.length === 0) {
+                alert("No hay preguntas disponibles para esta lección.");
+                showLessonView(topicId); return;
+            }
+            testTitleEl.textContent = `Test: ${lesson.title}`;
+            const questionsToAskCount = Math.min(10, questionsForTopic.length);
+            currentQuestions = questionsForTopic.sort(() => 0.5 - Math.random()).slice(0, questionsToAskCount);
+            renderQuestions();
+            lessonViewContainerEl.classList.add('hidden');
+            testAreaContainerEl.classList.remove('hidden');
+            scoreContainerEl.classList.add('hidden');
+        }
+        function renderQuestions() { 
+            questionContainerEl.innerHTML = '';
+            if (currentQuestions.length === 0) {
+                 questionContainerEl.innerHTML = "<p>No se pudieron cargar las preguntas.</p>";
+                 submitTestBtnEl.classList.add('hidden'); return;
+            }
+            submitTestBtnEl.classList.remove('hidden');
+            currentQuestions.forEach((q, index) => {
+                const questionItem = document.createElement('div');
+                questionItem.classList.add('question-item');
+                questionItem.innerHTML = `<p>${index + 1}. ${q.text}</p>`;
+                const optionsContainer = document.createElement('div');
+                optionsContainer.classList.add('options');
+                q.options.forEach((option, i) => {
+                    const label = document.createElement('label');
+                    const radio = document.createElement('input');
+                    radio.type = 'radio'; radio.name = `question-${index}`;
+                    radio.value = i; radio.required = true;
+                    label.appendChild(radio);
+                    label.appendChild(document.createTextNode(` ${option}`));
+                    optionsContainer.appendChild(label);
+                });
+                questionItem.appendChild(optionsContainer);
+                questionContainerEl.appendChild(questionItem);
+            });
+        }
+        function handleSubmitTest() { 
+            let score = 0;
+            if (currentQuestions.length === 0) { showScore(0,0); return; }
+            let allAnswered = true;
+            for (let i = 0; i < currentQuestions.length; i++) {
+                if (!document.querySelector(`input[name="question-${i}"]:checked`)) {
+                    allAnswered = false; break;
+                }
+            }
+            if (!allAnswered) { alert("Por favor, responde todas las preguntas."); return; }
+            currentQuestions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
+                if (selectedOption && parseInt(selectedOption.value) === q.correctAnswer) {
+                    score++;
+                }
+            });
+            showScore(score, currentQuestions.length);
+            localStorage.setItem(`score_${currentTopicId}`, score.toString());
+        }
+        function showScore(score, totalQuestions) {
+             scoreDisplayEl.textContent = `${score} / ${totalQuestions}`;
+            if (totalQuestions > 0) {
+                const percentage = (score / totalQuestions) * 100;
+                if (percentage >= 80) feedbackMessageEl.textContent = "¡Excelente! Dominas el tema. 🥳🎉";
+                else if (percentage >= 50) feedbackMessageEl.textContent = "¡Buen trabajo! Sigue repasando. 👍";
+                else feedbackMessageEl.textContent = "Necesitas estudiar más este tema. ¡Ánimo! 💪";
+            } else {
+                 feedbackMessageEl.textContent = "Test no completado o sin preguntas.";
+            }
+            testAreaContainerEl.classList.add('hidden');
+            scoreContainerEl.classList.remove('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initApp();
+            showWelcomeMessage();
+        });
+    </script>
+</body>
+</html>
